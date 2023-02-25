@@ -17,7 +17,6 @@ def server(host: str, port: int) -> None:
         while True:
             try:
                 massage, address = server_socket.recvfrom(api.BUFFER_SIZE)
-
                 # Create a new thread to handle the client request
                 thread = threading.Thread(target=client_handler, args=(server_socket,
                                                                        massage, address))
@@ -32,8 +31,7 @@ def server(host: str, port: int) -> None:
 
 
 def process_request(request: api.mHeader):
-    request.status_code = api.mHeader.STATUS_UNKNOWN
-    return request
+    return api.mHeader(None, api.Kind.RESPONSE.value, api.Nosah.NULL.value, api.Status_code.STATUS_OK.value, request.checksum, 123, "שלום מירומר".encode())
 
 
 def client_handler(server_socket, data, client_address) -> None:
@@ -47,9 +45,10 @@ def client_handler(server_socket, data, client_address) -> None:
                 f'Error while unpacking request: {e}') from e
 
         print(f"{client_address} Got request of length {len(data)} bytes")
-        print(request)
+        print(f"{client_address} got " + str(request))
 
         response = process_request(request)
+        print(f"{client_address} Sending " + str(response))
         response = response.pack()
         print(f"{client_address} Sending response of length {len(response)} bytes")
         server_socket.sendto(response, client_address)

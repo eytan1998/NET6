@@ -12,19 +12,18 @@ def client(server_address: tuple[str, int]) -> None:
 
         try:
             request = api.mHeader(
-                None, 0, False, False,False, api.mHeader.STATUS_OK, b'this is the data')
+                None, api.Kind.REQUEST_BY_QUERY.value, api.Nosah.SPARAD.value, 0, 1234, 5678, "שלום מי".encode())
 
             request = request.pack()
             print(f"{server_prefix} Sending request of length {len(request)} bytes")
-            client_socket.sendall(request)
+            client_socket.sendto(request, server_address)
 
             response = client_socket.recv(api.BUFFER_SIZE)
             print(f"{server_prefix} Got response of length {len(response)} bytes")
             response = api.mHeader.unpack(response)
             print(response)
 
-        except api.mHeader as e:
-            print(f"{server_prefix} Got error: {str(e)}")
+
         except Exception as e:
             print(f"{server_prefix} Unexpected error: {str(e)}")
     print(f"{server_prefix} Connection closed")
