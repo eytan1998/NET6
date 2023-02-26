@@ -1,7 +1,16 @@
 import argparse
+import json
 import socket
-
+from synagogue import SynagogueList, Synagogue, Nosah
 from UDP import api
+
+
+def send_by_query():
+    pass
+
+
+def send_by_ids():
+    pass
 
 
 def client(server_address: tuple[str, int]) -> None:
@@ -11,8 +20,9 @@ def client(server_address: tuple[str, int]) -> None:
         print(f"{server_prefix} Connection established")
 
         try:
-            request = api.mHeader(
-                None, api.Kind.REQUEST_BY_QUERY.value, api.Nosah.SPARAD.value, 0, 1234, 5678, "שלום מי".encode())
+
+            request = api.mHeader(None, api.Kind.SET_BY_ID.value, Nosah.NULL, 0, 1, 1,
+                                Synagogue("new bet knset", Nosah.ALL, 1,"12345678765432345678765432345676543").toJSON().encode())
 
             request = request.pack()
             print(f"{server_prefix} Sending request of length {len(request)} bytes")
@@ -22,8 +32,6 @@ def client(server_address: tuple[str, int]) -> None:
             print(f"{server_prefix} Got response of length {len(response)} bytes")
             response = api.mHeader.unpack(response)
             print(response)
-
-
         except Exception as e:
             print(f"{server_prefix} Unexpected error: {str(e)}")
     print(f"{server_prefix} Connection closed")

@@ -2,7 +2,7 @@ import enum
 import struct
 import typing
 import warnings
-
+import  synagogue
 DEFAULT_SERVER_HOST = "127.0.0.1"
 DEFAULT_SERVER_PORT = 9999
 BUFFER_SIZE = 65555
@@ -84,14 +84,6 @@ class Kind(enum.Enum):
     RESPONSE = 3
 
 
-class Nosah(enum.Enum):
-    NULL = 0
-    SPARAD = 1
-    ASHCANZE = 2
-    SPARADI = 3
-    BALADY = 4
-    SHAMI = 5
-    ALL = 15
 
 
 class Status_code(enum.Enum):
@@ -133,7 +125,7 @@ class mHeader:
             warnings.warn(f'The status code ({Status_code(self.status_code)}) is not 0 for a request')
         self.nosah = nosah
         if self.kind != 1 and self.nosah != 0:
-            warnings.warn(f'The nosah ({Nosah(self.nosah)}) is not 0 for a not query')
+            warnings.warn(f'The nosah ({synagogue.Nosah(self.nosah)}) is not 0 for a not query')
             self.nosah = 0
         self.checksum = checksum
         self.window = window
@@ -144,7 +136,7 @@ class mHeader:
                 f'Invalid data length: {len(self.data)} (must be at most {self.HEADER_MAX_DATA_LENGTH} bytes)')
 
     def pack_flags(self, kind, nosah, status_code):
-        return (kind << 14) | (nosah << 12) | status_code
+        return (kind << 14) | (nosah << 10) | status_code
 
     @staticmethod
     def unpack_flags(flags: int):
@@ -168,4 +160,4 @@ class mHeader:
                    nosah=nosah, checksum=checksum, window=window, data=data[cls.HEADER_MIN_LENGTH:])
 
     def __str__(self):
-        return f'{self.__class__.__name__}( total_length={self.length}, kind={Kind(self.kind)}, nosah={Nosah(self.nosah)}, status_code={Status_code(self.status_code)}, checksum={self.checksum}, window={self.window}, data={self.data.decode()})'
+        return f'{self.__class__.__name__}( total_length={self.length}, kind={Kind(self.kind)}, nosah={synagogue.Nosah(self.nosah)}, status_code={Status_code(self.status_code)}, checksum={self.checksum}, window={self.window}, data={self.data.decode()})'

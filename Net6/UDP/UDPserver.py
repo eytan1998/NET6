@@ -1,8 +1,18 @@
 import argparse
+import atexit
+import json
 import socket
 import threading
-
+from synagogue import SynagogueList, Synagogue, Nosah
 import api
+
+synagogue_list = SynagogueList()
+
+
+def exit_handler():
+    synagogue_list.write_json()
+    print(synagogue_list)
+    print("end, saved to json")
 
 
 def server(host: str, port: int) -> None:
@@ -30,8 +40,55 @@ def server(host: str, port: int) -> None:
             thread.join()
 
 
-def process_request(request: api.mHeader):
-    return api.mHeader(None, api.Kind.RESPONSE.value, api.Nosah.NULL.value, api.Status_code.STATUS_OK.value, request.checksum, 123, "שלום מירומר".encode())
+def process_request_and_send(server_socket, client_address, request: api.mHeader):
+    if request.kind == api.Kind.REQUEST_BY_QUERY.value:
+        temp = synagogue_list.get_by_name_and_nosah(request.data.decode(), request.nosah)
+
+        if temp is None:
+            send_response(server_socket, client_address, None)
+
+        if temp is not None:
+            send_response(server_socket, client_address,
+                          api.mHeader(None, api.Kind.RESPONSE.value, Nosah.NULL.value, api.Status_code.STATUS_OK.value,
+                                      request.checksum, 123, bytes(temp)))
+
+    elif request.kind == api.Kind.REQUEST_BY_IDS.value:
+        list_of_ids = list(request.data)
+        if list_of_ids is None: send_response(server_socket, client_address, None)
+        for id_in_list in list_of_ids:
+            temp = synagogue_list.get_by_id(id_in_list)
+            if temp is None:
+                send_response(server_socket, client_address, None)
+            else:
+                send_response(server_socket, client_address,
+                              api.mHeader(None, api.Kind.RESPONSE.value, Nosah.NULL.value,
+                                          api.Status_code.STATUS_OK.value,
+                                          0, 123, str(temp).encode()))
+
+    elif request.kind == api.Kind.SET_BY_ID.value:
+        ans = synagogue_list.set_by_id(Synagogue.fromJSON(request.data.decode()))
+        print(synagogue_list.get_by_id(1))
+        if ans == 0:
+            send_response(server_socket, client_address,
+                          api.mHeader(None, api.Kind.RESPONSE.value, Nosah.NULL.value,
+                                      api.Status_code.STATUS_OK.value,
+                                      0, 123, "set sucssefuly".encode()))
+        elif ans == -1:
+            send_response(server_socket, client_address,
+                          api.mHeader(None, api.Kind.RESPONSE.value, Nosah.NULL.value,
+                                      api.Status_code.STATUS_UNKNOWN.value,
+                                      0, 123, "NOT sucssefuly".encode()))
+
+
+def send_response(server_socket, client_address, response):
+    if response is None:
+        response = api.mHeader(None, api.Kind.RESPONSE.value, Nosah.NULL.value,
+                               api.Status_code.STATUS_UNKNOWN.value,
+                               1, 123, 'object not found'.encode())
+    print(f"{client_address} Sending " + str(response))
+    response = response.pack()
+    print(f"{client_address} Sending response of length {len(response)} bytes")
+    server_socket.sendto(response, client_address)
 
 
 def client_handler(server_socket, data, client_address) -> None:
@@ -47,16 +104,16 @@ def client_handler(server_socket, data, client_address) -> None:
         print(f"{client_address} Got request of length {len(data)} bytes")
         print(f"{client_address} got " + str(request))
 
-        response = process_request(request)
-        print(f"{client_address} Sending " + str(response))
-        response = response.pack()
-        print(f"{client_address} Sending response of length {len(response)} bytes")
-        server_socket.sendto(response, client_address)
+        process_request_and_send(server_socket, client_address, request)
+
     except:
         pass
 
 
 if __name__ == '__main__':
+    synagogue_list.read_json()
+    atexit.register(exit_handler)
+
     arg_parser = argparse.ArgumentParser(
         description='Server.')
 
