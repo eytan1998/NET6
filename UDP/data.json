@@ -1,0 +1,107 @@
+[
+    {
+        "py/object": "synagogue.Synagogue",
+        "name": "\u05e9\u05de\u05e9 \u05d5\u05de\u05d2\u05df",
+        "id_synagogue": 1,
+        "nosah": {
+            "py/reduce": [
+                {
+                    "py/type": "synagogue.Nosah"
+                },
+                {
+                    "py/tuple": [
+                        2
+                    ]
+                }
+            ]
+        },
+        "city": {
+            "py/reduce": [
+                {
+                    "py/type": "synagogue.City"
+                },
+                {
+                    "py/tuple": [
+                        1
+                    ]
+                }
+            ]
+        },
+        "prayers": "12345676543456787654",
+        "gabai": {
+            "py/object": "gabai.Gabai",
+            "name": "eitan",
+            "gabai_id": 92929,
+            "password": "1234",
+            "phone": "0512312312",
+            "synagogue_list": [
+                1,
+                2
+            ]
+        }
+    },
+    {
+        "py/object": "synagogue.Synagogue",
+        "name": "\u05e9\u05de\u05e9 \u05e9\u05dc\u05d5\u05dd",
+        "id_synagogue": 2,
+        "nosah": {
+            "py/reduce": [
+                {
+                    "py/type": "synagogue.Nosah"
+                },
+                {
+                    "py/tuple": [
+                        1
+                    ]
+                }
+            ]
+        },
+        "city": {
+            "py/id": 3
+        },
+        "prayers": "'\u05e7\u05e8\u05d0\u05d8\u05d5\u05df\u05dd\u05e4\u05dd\u05df\u05d5\u05d8\u05d0\u05e8\u05e7\u05e8\u05d0\u05d8\u05d5\u05df'",
+        "gabai": {
+            "py/id": 4
+        }
+    },
+    {
+        "py/object": "synagogue.Synagogue",
+        "name": "\u05d9\u05d5\u05e0\u05ea \u05e9\u05dc\u05d5\u05dd",
+        "id_synagogue": 9,
+        "nosah": {
+            "py/reduce": [
+                {
+                    "py/type": "synagogue.Nosah"
+                },
+                {
+                    "py/tuple": [
+                        5
+                    ]
+                }
+            ]
+        },
+        "city": {
+            "py/reduce": [
+                {
+                    "py/type": "synagogue.City"
+                },
+                {
+                    "py/tuple": [
+                        0
+                    ]
+                }
+            ]
+        },
+        "prayers": "iuytrewrtyuioiuytrtyu",
+        "gabai": {
+            "py/object": "gabai.Gabai",
+            "name": "oz",
+            "gabai_id": 732433229,
+            "password": "51241",
+            "phone": "099999",
+            "synagogue_list": [
+                9
+            ]
+        }
+    }
+]
