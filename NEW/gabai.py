@@ -4,7 +4,7 @@ import jsonpickle
 
 
 class Gabai:
-    def __init__(self, name, gabai_id:int, password, phone, synagogue_list) -> None:
+    def __init__(self, name, gabai_id: int, password, phone, synagogue_list) -> None:
         self.name = name
         self.gabai_id = gabai_id
         self.password = password
@@ -28,6 +28,7 @@ class Gabai:
 class GabaiList:
     def __init__(self):
         self.gabai_list = list()
+        self.nextid = 1
 
     def append(self, o) -> Gabai | None:
         if self.gabai_list.__contains__(o): return None
@@ -44,15 +45,40 @@ class GabaiList:
     def delete(self, o) -> None:
         self.gabai_list.remove(o)
 
+    def edit(self, o: Gabai, list_of_sysngogue):
+        try:
+            self.gabai_list.remove(self.get_by_id(o.gabai_id))
+        except:
+            pass
+        # for del
+        if o.name == "":
+            list_of_sysngogue.remove_from_gabai(o.gabai_id)
+            return 0
+        # for add
+        ans = o.gabai_id
+        if o.gabai_id == 0:
+            o.gabai_id = self.nextid
+            self.nextid += 1
+        # for edit
+        else:
+            list_of_sysngogue.edit_from_gabai(o)
+        # edit|add
+        self.gabai_list.append(o)
+        return ans
+
     def write_json(self) -> None:
         jsonpickle.set_encoder_options('json', sort_keys=False, indent=4)
         frozen = jsonpickle.encode(self.gabai_list)
-        with open('gabai_data.json', "w") as text_file:
+        with open('data_gabai.json', "w") as text_file:
             print(frozen, file=text_file)
+        with open("index_gabai.txt", "w") as text_file:
+            print(str(self.nextid), file=text_file)
 
     def read_json(self) -> None:
-        file = open('gabai_data.json', "r")
+        file = open('data_gabai.json', "r")
         self.gabai_list = jsonpickle.decode(file.read())
+        file = open("index_gabai.txt", "r")
+        self.nextid = int(file.readline())
 
     def __str__(self):
         a = ""

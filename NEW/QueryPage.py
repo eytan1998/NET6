@@ -1,5 +1,6 @@
 import tkinter as tk
 import tkinter.ttk as ttk
+from tkinter import END
 
 import proj_support
 from ScrolledListBox import ScrolledListBox
@@ -138,3 +139,6 @@ class QueryPage(tk.Frame):
         self.Button_query_View.configure(highlightbackground="#778899")
         self.Button_query_View.configure(relief="flat")
         self.Button_query_View.configure(text='''View''')
+
+    def update(self) -> None:
+        self.Scrolledlistbox_query.delete(0,END)

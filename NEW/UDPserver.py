@@ -100,6 +100,24 @@ def process_request_and_send(server_socket, client_address, request: api.mHeader
                       api.mHeader(None, api.Kind.RESPONSE.value, Nosah.NULL.value, City.NULL.value, 1234, 0,
                                   str(ans).encode()))
 
+    elif request.kind == api.Kind.SET_GABAI.value:
+        gabai = Gabai.fromJSON(request.data.decode())
+        ans = the_gabi_list.edit(gabai, the_synagogue_list)
+
+        send_response(server_socket, client_address,
+                      api.mHeader(None, api.Kind.RESPONSE.value, Nosah.NULL.value, City.NULL.value, 1234, 0,
+                                  str(ans).encode()))
+
+    elif request.kind == api.Kind.REQUEST_ALL_GABAI.value:
+        send_response(server_socket, client_address,
+                      api.mHeader(None, api.Kind.RESPONSE.value, Nosah.NULL.value, City.NULL.value, 1234, 0,
+                                  str(len(the_gabi_list.gabai_list)).encode()))
+
+        for gabai_to_send in the_gabi_list.gabai_list:
+            send_response(server_socket, client_address,
+                          api.mHeader(None, api.Kind.RESPONSE.value, Nosah.NULL.value, City.NULL.value, 1234, 0,
+                                      str(gabai_to_send).encode()))
+
     elif request.kind == api.Kind.REQUEST_LOGIN.value:
         the_data_got = request.data.decode().split(',')
         try:
@@ -138,7 +156,7 @@ if __name__ == '__main__':
     the_synagogue_list.read_json()
     the_gabi_list.read_json()
     atexit.register(exit_handler)
-    # g = Gabai("eitan", 1, "", "0512312312", [1, 2])
+    # g = Gabai("eitan", 1, "", "0512312312", [])
     # g1 = Gabai("oz", 2, "51241", "099999", [9])
     # the_gabi_list.append(g)
     # the_gabi_list.append(g1)

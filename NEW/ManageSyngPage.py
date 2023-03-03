@@ -28,14 +28,14 @@ class ManageSyngPage(tk.Frame):
         self.Scrolledlistbox_mngsyng.configure(highlightbackground="#f6f7f9")
         self.Scrolledlistbox_mngsyng.configure(highlightcolor="#778899")
         self.Scrolledlistbox_mngsyng.configure(selectbackground="#dedfe0")
+
+
         self.Button_mngsyng_add = tk.Button(self)
         self.Button_mngsyng_add.place(relx=0.1, rely=0.778, height=43, width=143)
-
         self.Button_mngsyng_add.configure(activebackground="#5faeb6")
         self.Button_mngsyng_add.configure(background="#778899")
         self.Button_mngsyng_add.configure(borderwidth="2")
-        self.Button_mngsyng_add.configure(
-            command=lambda: proj_support.add_syng(controller))
+        self.Button_mngsyng_add.configure(command=lambda: proj_support.add_syng(controller))
         self.Button_mngsyng_add.configure(compound='left')
         self.Button_mngsyng_add.configure(disabledforeground="#b9b9bb")
         self.Button_mngsyng_add.configure(foreground="#f6f7f9")
@@ -62,7 +62,7 @@ class ManageSyngPage(tk.Frame):
         self.Button_mngsyng_del.configure(activebackground="#5faeb6")
         self.Button_mngsyng_del.configure(background="#778899")
         self.Button_mngsyng_del.configure(borderwidth="2")
-        self.Button_mngsyng_del.configure(command=lambda: proj_support.del_syng(controller))
+        self.Button_mngsyng_del.configure(command=lambda: proj_support.del_syng(controller,self.Scrolledlistbox_mngsyng))
         self.Button_mngsyng_del.configure(compound='left')
         self.Button_mngsyng_del.configure(cursor="fleur")
         self.Button_mngsyng_del.configure(disabledforeground="#b9b9bb")
@@ -85,4 +85,4 @@ class ManageSyngPage(tk.Frame):
         self.Button_mngsyng_back.configure(text='''Back''')
 
     def update(self) -> None:
-        proj_support.diplay_syng_list(self.controller, self.Scrolledlistbox_mngsyng)
+        proj_support.display_syng_list(self.controller, self.Scrolledlistbox_mngsyng)

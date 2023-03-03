@@ -6,10 +6,9 @@
 #    Feb 28, 2023 11:07:08 AM IST  platform: Linux
 
 import sys
-from tkinter import ttk, ANCHOR, END
+from tkinter import ttk, ANCHOR, END, messagebox
 
 import UDPclient
-from DNSclient import sendDNS
 from ScrolledListBox import ScrolledListBox
 from gabai import Gabai
 from synagogue import Synagogue, Nosah, City
@@ -72,13 +71,11 @@ def login_guest(controller):
 
 
 def login_gabai(controller, mID, mPassword):
-    print("id: " + mID + "\npassword: " + mPassword)
+    # print("id: " + mID + "\npassword: " + mPassword)
     ans = UDPclient.send_login(('127.0.0.1', 6666), mID, mPassword)
 
-    if ans == 'wrong_password':
-        print("[!] wrong password")
-    elif ans == 'wrong_id':
-        print("[!] wrong id")
+    if ans == 'wrong_password' or ans == 'wrong_id':
+        messagebox.showinfo("Warning", "[!] wrong id or password")
     else:
         print("[+] current")
         goto(controller, "MainPage")
@@ -86,17 +83,16 @@ def login_gabai(controller, mID, mPassword):
 
 
 def goto_manage_gabai(controller):
-    # print("password: " + controller.gabai.password)
-    # if controller.gabai is None:
-    #     print("[!] not have premssion")
-    #     return
-    # goto(controller, "ManageSyngPage")
+    if controller.gabai is None or controller.gabai.gabai_id != 1:
+        messagebox.showinfo("Warning", "[!] only for admin")
+        return
+    goto(controller, "ManageGabaiPage")
     pass
 
 
 def goto_manage_syng(controller):
     if controller.gabai is None:
-        print("[!] not have premssion")
+        messagebox.showinfo("Warning", "[!] only for gabai")
         return
     goto(controller, "ManageSyngPage")
 
@@ -106,11 +102,11 @@ def send_query(controller, name, nosah, city, Scrolledlistbox_query: ScrolledLis
     controller.syng_list = []
     ans = UDPclient.send_by_query(('127.0.0.1', 6666), name, nosah.value, city.value)
     if ans is None:
-        print("[!] dosent have much")
+        messagebox.showinfo("Warning", "[!] No result")
         return
     for iteam in ans:
         ad = Synagogue.fromJSON(iteam)
-        Scrolledlistbox_query.insert(END, ad.name)
+        Scrolledlistbox_query.insert(END, str(ad.id_synagogue) + ":" + ad.name)
         controller.syng_list.append(ad)
 
 
@@ -118,7 +114,7 @@ def view_syng(controller, Scrolledlistbox_query):
     if controller.syng_list is None: return None
     controller.syng_to_view = None
     for x in controller.syng_list:
-        if x.name == Scrolledlistbox_query.get(ANCHOR):
+        if x.id_synagogue == int(Scrolledlistbox_query.get(ANCHOR).split(':')[0]):
             controller.syng_to_view = x
             break
     if controller.syng_to_view is not None:
@@ -130,42 +126,108 @@ def add_syng(controller):
     goto(controller, "ViewSyngPage")
 
 
-def del_syng(*args):
-    if _debug:
-        print('proj_support.del_syng')
-        for arg in args:
-            print('    another arg:', arg)
-        sys.stdout.flush()
+def add_gabai(controller):
+    controller.gabai_to_view = Gabai("", 0, "", "", [])
+    goto(controller, "ViewGabaiPage")
+
+
+def del_syng(controller, Scrolledlistbox_mngabai: ScrolledListBox):
+    syng_to_del = None
+    for x in controller.syng_list:
+        if x.id_synagogue == int(Scrolledlistbox_mngabai.get(ANCHOR).split(':')[0]):
+            syng_to_del = x
+            syng_to_del.name = ""
+            break
+    ans = (UDPclient.send_edit_syng(('127.0.0.1', 6666), syng_to_del))
+    ans = int(ans)
+    if ans == 0:
+        Scrolledlistbox_mngabai.delete(ANCHOR)
+        controller.gabai.synagogue_list.remove(syng_to_del.id_synagogue)
+        messagebox.showinfo("Message", "[!] Successful delete")
+    if ans == -1:
+        messagebox.showinfo("Warning", "[!] Failed delete")
+
+
+def del_gabai(controller, Scrolledlistbox_mngabai):
+    gabai_to_del = None
+    for x in controller.gabai_list:
+        if x.gabai_id == int(Scrolledlistbox_mngabai.get(ANCHOR).split(':')[0]):
+            gabai_to_del = x
+            gabai_to_del.name = ""
+            break
+    ans = (UDPclient.send_edit_gabai(('127.0.0.1', 6666), gabai_to_del))
+    ans = int(ans)
+    if ans == 0:
+        Scrolledlistbox_mngabai.delete(ANCHOR)
+        messagebox.showinfo("Message", "[!] Successful delete")
+    if ans == -1:
+        messagebox.showinfo("Warning", "[!] Failed delete")
 
 
 def edit_syng(controller, Scrolledlistbox_mngabai: ScrolledListBox):
-    print(Scrolledlistbox_mngabai.get(ANCHOR))
+    controller.syng_to_view = None
+    for x in controller.syng_list:
+        if x.id_synagogue == int(Scrolledlistbox_mngabai.get(ANCHOR).split(':')[0]):
+            controller.syng_to_view = x
+            break
+    goto(controller, "ViewSyngPage")
 
 
-def get_gabai(*args):
-    if _debug:
-        print('proj_support.get_gabai')
-        for arg in args:
-            print('    another arg:', arg)
-        sys.stdout.flush()
+def edit_gabai(controller, Scrolledlistbox_mngabai):
+    controller.gabai_to_view = None
+    for x in controller.gabai_list:
+        if x.gabai_id == int(Scrolledlistbox_mngabai.get(ANCHOR).split(':')[0]):
+            controller.gabai_to_view = x
+            break
+    goto(controller, "ViewGabaiPage")
 
 
-def save_syng(controller, syng_to_edit):
-    ans = (UDPclient.send_add_syng(('127.0.0.1', 6666), syng_to_edit))
-    ans = int(ans)
-    if ans != -1:
-        controller.gabai.synagogue_list.append(ans)
+def save_syng(controller, syng_to_edit: Synagogue):
+    print(syng_to_edit)
     print(controller.gabai)
+    if syng_to_edit.id_synagogue not in controller.gabai.synagogue_list \
+            and syng_to_edit.id_synagogue != 0:
+        messagebox.showinfo("Warning", "[!] Have to be the gabai")
+        return
+    ans = (UDPclient.send_edit_syng(('127.0.0.1', 6666), syng_to_edit))
+    ans = int(ans)
+    if ans != -1 and ans != 0:
+        if ans not in controller.gabai.synagogue_list:
+            controller.gabai.synagogue_list.append(ans)
     goto(controller, "MainPage")
 
 
-def diplay_syng_list(controller, Scrolledlistbox_mngsyng):
+def save_gabai(controller, gabai_to_edit):
+    ans = (UDPclient.send_edit_gabai(('127.0.0.1', 6666), gabai_to_edit))
+    ans = int(ans)
+    # if ans != -1 and ans != 0:
+    # controller.gabai.synagogue_list.append(ans)
+    goto(controller, "MainPage")
+
+
+def display_syng_list(controller, Scrolledlistbox_mngsyng):
     Scrolledlistbox_mngsyng.delete(0, END)
-    print(controller.gabai.synagogue_list)
+    # print(controller.gabai.synagogue_list)
     ans = UDPclient.send_request_by_ids(('127.0.0.1', 6666), controller.gabai.synagogue_list)
+    controller.syng_list = []
     if ans is None:
-        print("[!] dosent have much")
+        messagebox.showinfo("Warning", "[!] No result")
         return
-    for iteam in ans:
-        ad = Synagogue.fromJSON(iteam)
-        Scrolledlistbox_mngsyng.insert(0, ad.name)
+    for item in ans:
+        ad = Synagogue.fromJSON(item)
+        Scrolledlistbox_mngsyng.insert(END, str(ad.id_synagogue) + ":" + ad.name)
+        controller.syng_list.append(ad)
+
+
+def display_gabai_list(controller, Scrolledlistbox_mngabai):
+    Scrolledlistbox_mngabai.delete(0, END)
+    print(controller.gabai.synagogue_list)
+    ans = UDPclient.send_request_all_gabai(('127.0.0.1', 6666))
+    controller.gabai_list = []
+    if ans is None:
+        messagebox.showinfo("Warning", "[!] No result")
+        return
+    for item in ans:
+        ad = Gabai.fromJSON(item)
+        Scrolledlistbox_mngabai.insert(END, str(ad.gabai_id) + ":" + ad.name)
+        controller.gabai_list.append(ad)

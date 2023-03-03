@@ -23,7 +23,7 @@ BUFFER_SIZE = 65555
         REQUEST_BY_ID'S = 2
         REQUEST_ALL_GABAI = 3
         SET_SYNAGOGUE = 4
-        SET_GABAI = 5 gabai
+        SET_GABAI = 5 
         RESPONSE = 6
         
     - nosah (4 bit):
@@ -82,6 +82,7 @@ C                  S
     <- gabai : RESPONSE (good?)
     
 (admin):
+        0. get all gabai REQUEST_ALL_GABAI,RESPONSE
        1. add _ gabai : SET_GABAI , RESPONSE (good?)
        2. del gabai (del synag) : SET_GABAI, RESPONSE (good?)
        
@@ -178,7 +179,7 @@ class mHeader:
     @staticmethod
     def unpack_flags(flags: int):
         city = flags & ((1 << 9) - 1)  # flags & 0b000_0000_111111111
-        nosah = (flags & (15 << 9)) >> 9 # flags & 0b000_1111_000000000
+        nosah = (flags & (15 << 9)) >> 9  # flags & 0b000_1111_000000000
         kind = (flags & (7 << 13)) >> 13  # flags & 0b111_0000_000000000
         return kind, nosah, city
 

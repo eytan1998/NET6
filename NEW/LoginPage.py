@@ -73,6 +73,7 @@ class LoginPage(tk.Frame):
         self.TEntry_login_Password.configure(takefocus="")
         self.TEntry_login_Password.configure(cursor="xterm")
         self.TEntry_login_Password.configure(foreground="black")
+        self.TEntry_login_Password.configure(show="*")
 
         self.Button_login_gabai = tk.Button(self)
         self.Button_login_gabai.place(relx=0.583, rely=0.556, height=43

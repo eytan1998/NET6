@@ -153,16 +153,13 @@ class ViewSyngPage(tk.Frame):
         self.Button_viewsyng_save.configure(activebackground="#5faeb6")
         self.Button_viewsyng_save.configure(background="#778899")
         self.Button_viewsyng_save.configure(borderwidth="2")
-        self.Button_viewsyng_save.configure(command=lambda: proj_support.save_syng(controller,Synagogue(
-                                                                                       name=self.TEntry_viewsyng_name.get(),
-                                                                                       id_synagogue=self.controller.syng_to_view.id_synagogue,
-                                                                                       nosah=Nosah.__getitem__(
-                                                                                           self.comboboxNosah.get())
-                                                                                       , city=City.__getitem__(
-                                                                                           self.comboboxCity.get()),
-                                                                                       prayers=self.Scrolledtext1.get(1.0,
-                                                                                                                      END),
-                                                                                       gabai=controller.gabai)))
+        self.Button_viewsyng_save.configure(command=lambda: proj_support.save_syng(controller, Synagogue(
+            name=self.TEntry_viewsyng_name.get(),
+            id_synagogue=self.controller.syng_to_view.id_synagogue,
+            nosah=Nosah.__getitem__(self.comboboxNosah.get()),
+            city=City.__getitem__(self.comboboxCity.get()),
+            prayers=self.Scrolledtext1.get(1.0, END),
+            gabai=controller.gabai)))
         self.Button_viewsyng_save.configure(compound='left')
         self.Button_viewsyng_save.configure(disabledforeground="#b9b9bb")
         self.Button_viewsyng_save.configure(foreground="#f6f7f9")

@@ -16,7 +16,39 @@ def checksum_calculator(data):
     checksum = zlib.crc32(data)
     return checksum
 
-def send_add_syng(server_address: tuple[str, int],syng):
+
+def send_request_all_gabai(server_address):
+    server_prefix = f"{{{server_address[0]}:{server_address[1]}}}"
+    port = server_address[1]
+    with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as client_socket:
+        client_socket.bind(('', port + 1))
+        client_socket.connect(server_address)
+        try:
+            request = api.mHeader(None, api.Kind.REQUEST_ALL_GABAI.value, Nosah.NULL, City.NULL, 1234, 0, ''.encode())
+            checksum = checksum_calculator(request.pack())
+
+            udp_header = struct.pack("!IIII", port + 1, port, request.length, checksum)
+            request = request.pack()
+            packet_with_header = udp_header + request
+
+            print(f"{server_prefix} Sending request of length {len(request)} bytes")
+            client_socket.sendto(packet_with_header, server_address)
+
+            number_to_get = client_socket.recv(api.BUFFER_SIZE)
+            number_to_get = api.mHeader.unpack(number_to_get).data.decode()
+
+            recvGabai = []
+            for i in range(int(number_to_get)):
+                response = client_socket.recv(api.BUFFER_SIZE)
+                print(f"{server_prefix} Got response of length {len(response)} bytes")
+                recvGabai.append(api.mHeader.unpack(response).data.decode())
+            return recvGabai
+        except Exception as e:
+            print(f"{server_prefix} Unexpected error: {str(e)}")
+    print(f"{server_prefix} Connection closed")
+
+
+def send_edit_syng(server_address: tuple[str, int], syng):
     server_prefix = f"{{{server_address[0]}:{server_address[1]}}}"
     port = server_address[1]
     with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as client_socket:
@@ -24,7 +56,8 @@ def send_add_syng(server_address: tuple[str, int],syng):
         client_socket.connect(server_address)
 
         try:
-            request = api.mHeader(None, api.Kind.SET_SYNAGOGUE.value, Nosah.NULL, City.NULL, 1234, 0, str(syng).encode())
+            request = api.mHeader(None, api.Kind.SET_SYNAGOGUE.value, Nosah.NULL, City.NULL, 1234, 0,
+                                  str(syng).encode())
             checksum = checksum_calculator(request.pack())
 
             udp_header = struct.pack("!IIII", port + 1, port, request.length, checksum)
@@ -42,6 +75,36 @@ def send_add_syng(server_address: tuple[str, int],syng):
         except Exception as e:
             print(f"{server_prefix} Unexpected error: {str(e)}")
     print(f"{server_prefix} Connection closed")
+
+
+def send_edit_gabai(server_address: tuple[str, int], gabai):
+    server_prefix = f"{{{server_address[0]}:{server_address[1]}}}"
+    port = server_address[1]
+    with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as client_socket:
+        client_socket.bind(('', port + 1))
+        client_socket.connect(server_address)
+
+        try:
+            request = api.mHeader(None, api.Kind.SET_GABAI.value, Nosah.NULL, City.NULL, 1234, 0,
+                                  str(gabai).encode())
+            checksum = checksum_calculator(request.pack())
+
+            udp_header = struct.pack("!IIII", port + 1, port, request.length, checksum)
+            request = request.pack()
+            packet_with_header = udp_header + request
+
+            print(f"{server_prefix} Sending request of length {len(request)} bytes")
+            client_socket.sendto(packet_with_header, server_address)
+
+            response = client_socket.recv(api.BUFFER_SIZE)
+            print(f"{server_prefix} Got response of length {len(response)} bytes")
+            response = api.mHeader.unpack(response)
+            return response.data.decode()
+
+        except Exception as e:
+            print(f"{server_prefix} Unexpected error: {str(e)}")
+    print(f"{server_prefix} Connection closed")
+
 
 def send_by_query(server_address: tuple[str, int], name, nosah, city):
     server_prefix = f"{{{server_address[0]}:{server_address[1]}}}"
