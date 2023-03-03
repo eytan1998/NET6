@@ -61,17 +61,7 @@ class ManageGabaiPage(tk.Frame):
         self.Button_mngabai_del.configure(text='''Del''')
 
 
-        self.Button_mngabai_back = tk.Button(self)
-        self.Button_mngabai_back.place(relx=0.0, rely=0.0, height=33, width=52)
-        self.Button_mngabai_back.configure(activebackground="#5faeb6")
-        self.Button_mngabai_back.configure(background="#778899")
-        self.Button_mngabai_back.configure(borderwidth="2")
-        self.Button_mngabai_back.configure(command=lambda: proj_support.goto(controller, "MainPage"))
-        self.Button_mngabai_back.configure(compound='left')
-        self.Button_mngabai_back.configure(foreground="#f6f7f9")
-        self.Button_mngabai_back.configure(highlightbackground="#778899")
-        self.Button_mngabai_back.configure(relief="flat")
-        self.Button_mngabai_back.configure(text='''Back''')
+
 
 
         self.Button_mngabai_edit = tk.Button(self)
@@ -88,6 +78,14 @@ class ManageGabaiPage(tk.Frame):
         self.Button_mngabai_edit.configure(highlightbackground="#778899")
         self.Button_mngabai_edit.configure(relief="flat")
         self.Button_mngabai_edit.configure(text='''Edit''')
+
+        self.Button_mngabai_back = tk.Button(self)
+        self.Button_mngabai_back.place(relx=0.0, rely=0.0, height=33, width=52)
+        self.Button_mngabai_back.configure(command=lambda: proj_support.goto(controller, "MainPage"))
+        self.Button_mngabai_back.configure(background="#f6f7f9")
+        self.Button_mngabai_back.configure(relief='flat', highlightthickness=0)
+        self.photo = tk.PhotoImage(file=r"ic_back.png")
+        self.Button_mngabai_back.configure(text='Back', image=self.photo)
 
     def update(self) -> None:
         proj_support.display_gabai_list(self.controller, self.Scrolledlistbox_mngabai)

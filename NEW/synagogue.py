@@ -40,7 +40,8 @@ class City(IntEnum):
 
 
 class Synagogue:
-    def __init__(self, name="", id_synagogue: int = 0, nosah: Nosah = Nosah.NULL, city: City = City.NULL, prayers="",
+    def __init__(self, name: str = "", id_synagogue: int = 0, nosah: Nosah = Nosah.NULL, city: City = City.NULL,
+                 prayers: str = "",
                  gabai: Gabai = None) -> None:
         self.name = name
         self.id_synagogue = id_synagogue

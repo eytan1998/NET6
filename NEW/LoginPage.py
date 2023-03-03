@@ -1,5 +1,5 @@
 import tkinter as tk  # python 3
-from tkinter import ttk
+from tkinter import ttk, PhotoImage
 
 import proj_support
 from proj_support import _style_code
@@ -31,7 +31,6 @@ class LoginPage(tk.Frame):
         self.Label_login_title.configure(highlightbackground="#f6f7f9")
         self.Label_login_title.configure(text='''Login''')
 
-
         self.Label_ID = tk.Label(self)
         self.Label_ID.place(relx=0.117, rely=0.244, height=41, width=169)
         self.Label_ID.configure(activebackground="#ffffff")
@@ -43,7 +42,6 @@ class LoginPage(tk.Frame):
         self.Label_ID.configure(foreground="#778899")
         self.Label_ID.configure(highlightbackground="#f6f7f9")
         self.Label_ID.configure(text='''ID''')
-
 
         self.Label_Password = tk.Label(self)
         self.Label_Password.place(relx=0.117, rely=0.356, height=41, width=169)
@@ -58,14 +56,12 @@ class LoginPage(tk.Frame):
         self.Label_Password.configure(text='''Password''')
         _style_code()
 
-
         self.TEntry_login_ID = ttk.Entry(self)
         self.TEntry_login_ID.place(relx=0.467, rely=0.267, relheight=0.069
                                    , relwidth=0.423)
         self.TEntry_login_ID.configure(takefocus="")
         self.TEntry_login_ID.configure(cursor="xterm")
         self.TEntry_login_ID.configure(foreground="black")
-
 
         self.TEntry_login_Password = ttk.Entry(self)
         self.TEntry_login_Password.place(relx=0.467, rely=0.378, relheight=0.069
@@ -81,7 +77,9 @@ class LoginPage(tk.Frame):
         self.Button_login_gabai.configure(activebackground="#5faeb6")
         self.Button_login_gabai.configure(background="#778899")
         self.Button_login_gabai.configure(borderwidth="2")
-        self.Button_login_gabai.configure(command=lambda: proj_support.login_gabai(controller, self.TEntry_login_ID.get(), self.TEntry_login_Password.get()))
+        self.Button_login_gabai.configure(
+            command=lambda: proj_support.login_gabai(controller, self.TEntry_login_ID.get(),
+                                                     self.TEntry_login_Password.get()))
         self.Button_login_gabai.configure(compound='left')
         self.Button_login_gabai.configure(disabledforeground="#b9b9bb")
         self.Button_login_gabai.configure(foreground="#f6f7f9")
@@ -105,26 +103,10 @@ class LoginPage(tk.Frame):
         self.Button_login_guest.configure(relief="flat")
         self.Button_login_guest.configure(text='''Login as guest''')
 
-
-        self.Log_login = tk.Text(self)
-        self.Log_login.place(relx=0.133, rely=0.756, relheight=0.209
-                             , relwidth=0.793)
-        self.Log_login.configure(background="white")
-        self.Log_login.configure(font="TkTextFont")
-        self.Log_login.configure(highlightbackground="#778899")
-        self.Log_login.configure(selectbackground="#dedfe0")
-        self.Log_login.configure(wrap="none")
-
-
         self.Button_login_back = tk.Button(self)
         self.Button_login_back.place(relx=0.0, rely=0.0, height=33, width=52)
-        self.Button_login_back.configure(activebackground="#5faeb6")
         self.Button_login_back.configure(command=lambda: proj_support.goto(controller, "SetUpPage"))
-        self.Button_login_back.configure(background="#778899")
-        self.Button_login_back.configure(borderwidth="2")
-        self.Button_login_back.configure(compound='left')
-        self.Button_login_back.configure(cursor="fleur")
-        self.Button_login_back.configure(foreground="#f6f7f9")
-        self.Button_login_back.configure(highlightbackground="#778899")
-        self.Button_login_back.configure(relief="flat")
-        self.Button_login_back.configure(text='''Back''')
+        self.Button_login_back.configure(background="#f6f7f9")
+        self.Button_login_back.configure(relief='flat', highlightthickness=0)
+        self.photo = PhotoImage(file=r"ic_back.png")
+        self.Button_login_back.configure(text='Back', image=self.photo)

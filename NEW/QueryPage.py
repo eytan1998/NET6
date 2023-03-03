@@ -27,7 +27,7 @@ class QueryPage(tk.Frame):
         _style_code()
 
         self.Scrolledlistbox_query = ScrolledListBox(self)
-        self.Scrolledlistbox_query.place(relx=0.033, rely=0.308, relheight=0.642
+        self.Scrolledlistbox_query.place(relx=0.033, rely=0.308, relheight=0.5
                                          , relwidth=0.943)
         self.Scrolledlistbox_query.configure(background="white")
         self.Scrolledlistbox_query.configure(cursor="xterm")
@@ -114,17 +114,7 @@ class QueryPage(tk.Frame):
         self.Button_query_search.configure(relief="flat")
         self.Button_query_search.configure(text='''Search''')
 
-        self.Button_query_back = tk.Button(self)
-        self.Button_query_back.place(relx=0.0, rely=0.0, height=33, width=52)
-        self.Button_query_back.configure(activebackground="#5faeb6")
-        self.Button_query_back.configure(command=lambda: proj_support.goto(controller, "MainPage"))
-        self.Button_query_back.configure(background="#778899")
-        self.Button_query_back.configure(borderwidth="2")
-        self.Button_query_back.configure(compound='left')
-        self.Button_query_back.configure(foreground="#f6f7f9")
-        self.Button_query_back.configure(highlightbackground="#778899")
-        self.Button_query_back.configure(relief="flat")
-        self.Button_query_back.configure(text='''Back''')
+
 
         self.Button_query_View = tk.Button(self)
         self.Button_query_View.place(relx=0.417, rely=0.879, height=43
@@ -139,6 +129,14 @@ class QueryPage(tk.Frame):
         self.Button_query_View.configure(highlightbackground="#778899")
         self.Button_query_View.configure(relief="flat")
         self.Button_query_View.configure(text='''View''')
+
+        self.Button_query_back = tk.Button(self)
+        self.Button_query_back.place(relx=0.0, rely=0.0, height=33, width=52)
+        self.Button_query_back.configure(command=lambda: proj_support.goto(controller, "MainPage"))
+        self.Button_query_back.configure(background="#f6f7f9")
+        self.Button_query_back.configure(relief='flat', highlightthickness=0)
+        self.photo = tk.PhotoImage(file=r"ic_back.png")
+        self.Button_query_back.configure(text='Back', image=self.photo)
 
     def update(self) -> None:
         self.Scrolledlistbox_query.delete(0,END)

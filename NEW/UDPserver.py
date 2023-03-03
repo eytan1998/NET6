@@ -156,14 +156,6 @@ if __name__ == '__main__':
     the_synagogue_list.read_json()
     the_gabi_list.read_json()
     atexit.register(exit_handler)
-    # g = Gabai("eitan", 1, "", "0512312312", [])
-    # g1 = Gabai("oz", 2, "51241", "099999", [9])
-    # the_gabi_list.append(g)
-    # the_gabi_list.append(g1)
-    # the_synagogue_list.append(Synagogue("שמש ומגן", 1, Nosah.ASHCANZE, City.JERULEAM, "12345676543456787654", g))
-    # the_synagogue_list.append(Synagogue("שמש שלום", 2, Nosah.SPARAD, City.JERULEAM, "'קראטוןםפםןוטארקראטון'", g))
-    # the_synagogue_list.append(Synagogue("יונת שלום", 9, Nosah.SHAMI, City.ALL, "iuytrewrtyuioiuytrtyu", g1))
-
     arg_parser = argparse.ArgumentParser(
         description='Server.')
 

@@ -103,18 +103,7 @@ class ViewGabaiPage(tk.Frame):
         self.Button_viewgabai_save.configure(relief="flat")
         self.Button_viewgabai_save.configure(text='''Save''')
 
-        self.Button_viewgabai_back = tk.Button(self)
-        self.Button_viewgabai_back.place(relx=0.0, rely=0.0, height=33
-                                         , width=52)
-        self.Button_viewgabai_back.configure(activebackground="#5faeb6")
-        self.Button_viewgabai_back.configure(background="#778899")
-        self.Button_viewgabai_back.configure(borderwidth="2")
-        self.Button_viewgabai_back.configure(compound='left')
-        self.Button_viewgabai_back.configure(foreground="#f6f7f9")
-        self.Button_viewgabai_back.configure(highlightbackground="#778899")
-        self.Button_viewgabai_back.configure(relief="flat")
-        self.Button_viewgabai_back.configure(text='''Back''')
-        self.Button_viewgabai_back.configure(command=lambda: proj_support.goto(self.controller, "ManageGabaiPage"))
+
 
         self.TEntry_viewgabai_pass = ttk.Entry(self)
         self.TEntry_viewgabai_pass.place(relx=0.3, rely=0.397, relheight=0.046
@@ -129,6 +118,14 @@ class ViewGabaiPage(tk.Frame):
         self.TEntry_viewgabai_ID.configure(takefocus="")
         self.TEntry_viewgabai_ID.configure(cursor="fleur")
         self.TEntry_viewgabai_ID.configure(foreground="black")
+
+        self.Button_viewgabai_back = tk.Button(self)
+        self.Button_viewgabai_back.place(relx=0.0, rely=0.0, height=33, width=52)
+        self.Button_viewgabai_back.configure(command=lambda: proj_support.goto(self.controller, "ManageGabaiPage"))
+        self.Button_viewgabai_back.configure(background="#f6f7f9")
+        self.Button_viewgabai_back.configure(relief='flat', highlightthickness=0)
+        self.photo = tk.PhotoImage(file=r"ic_back.png")
+        self.Button_viewgabai_back.configure(text='Back', image=self.photo)
 
     def update(self) -> None:
         x = self.controller.gabai_to_view

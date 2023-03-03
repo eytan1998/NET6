@@ -73,13 +73,14 @@ def login_guest(controller):
 def login_gabai(controller, mID, mPassword):
     # print("id: " + mID + "\npassword: " + mPassword)
     ans = UDPclient.send_login(('127.0.0.1', 6666), mID, mPassword)
-
-    if ans == 'wrong_password' or ans == 'wrong_id':
+    if ans is None:
+        messagebox.showinfo("Warning", "[!] bad connection")
+    elif ans == 'wrong_password' or ans == 'wrong_id':
         messagebox.showinfo("Warning", "[!] wrong id or password")
     else:
         print("[+] current")
-        goto(controller, "MainPage")
         controller.gabai = Gabai.fromJSON(ans)
+        goto(controller, "MainPage")
 
 
 def goto_manage_gabai(controller):
@@ -183,12 +184,6 @@ def edit_gabai(controller, Scrolledlistbox_mngabai):
 
 
 def save_syng(controller, syng_to_edit: Synagogue):
-    print(syng_to_edit)
-    print(controller.gabai)
-    if syng_to_edit.id_synagogue not in controller.gabai.synagogue_list \
-            and syng_to_edit.id_synagogue != 0:
-        messagebox.showinfo("Warning", "[!] Have to be the gabai")
-        return
     ans = (UDPclient.send_edit_syng(('127.0.0.1', 6666), syng_to_edit))
     ans = int(ans)
     if ans != -1 and ans != 0:
@@ -197,7 +192,10 @@ def save_syng(controller, syng_to_edit: Synagogue):
     goto(controller, "MainPage")
 
 
-def save_gabai(controller, gabai_to_edit):
+def save_gabai(controller, gabai_to_edit: Gabai):
+    if gabai_to_edit.gabai_id == 1:
+        messagebox.showinfo("Warning", "[!] cant edit admin")
+        return
     ans = (UDPclient.send_edit_gabai(('127.0.0.1', 6666), gabai_to_edit))
     ans = int(ans)
     # if ans != -1 and ans != 0:
@@ -221,7 +219,7 @@ def display_syng_list(controller, Scrolledlistbox_mngsyng):
 
 def display_gabai_list(controller, Scrolledlistbox_mngabai):
     Scrolledlistbox_mngabai.delete(0, END)
-    print(controller.gabai.synagogue_list)
+    # print(controller.gabai.synagogue_list)
     ans = UDPclient.send_request_all_gabai(('127.0.0.1', 6666))
     controller.gabai_list = []
     if ans is None:
@@ -229,5 +227,6 @@ def display_gabai_list(controller, Scrolledlistbox_mngabai):
         return
     for item in ans:
         ad = Gabai.fromJSON(item)
+        if ad.gabai_id == 1: continue
         Scrolledlistbox_mngabai.insert(END, str(ad.gabai_id) + ":" + ad.name)
         controller.gabai_list.append(ad)

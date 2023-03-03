@@ -2,8 +2,8 @@
     {
         "py/object": "gabai.Gabai",
         "name": "admin",
-        "gabai_id": -1243,
-        "password": 1234,
+        "gabai_id": 1,
+        "password": "1243",
         "phone": "054548111",
         "synagogue_list": []
     }

@@ -57,15 +57,29 @@ class MainPage(tk.Frame):
         self.Button_main_manag_gab.configure(relief="flat")
         self.Button_main_manag_gab.configure(text='''Manage gabaies''')
 
+        self.Label_setup_name = tk.Label(self)
+        self.Label_setup_name.place(relx=0.05, rely=0.867, height=41
+                                    , width=539)
+        self.Label_setup_name.configure(activebackground="#ffffff")
+        self.Label_setup_name.configure(anchor='w')
+        self.Label_setup_name.configure(background="#f6f7f9")
+        self.Label_setup_name.configure(compound='center')
+        self.Label_setup_name.configure(disabledforeground="#b9b9bb")
+        self.Label_setup_name.configure(font="-family {DejaVu Sans} -size 16")
+        self.Label_setup_name.configure(foreground="#778899")
+        self.Label_setup_name.configure(highlightbackground="#f6f7f9")
+        self.Label_setup_name.configure(text='''Current user: Guest''')
+
         self.Button_main_back = tk.Button(self)
         self.Button_main_back.place(relx=0.0, rely=0.0, height=33, width=52)
-        self.Button_main_back.configure(activebackground="#5faeb6")
         self.Button_main_back.configure(command=lambda: proj_support.goto(controller, "LoginPage"))
-        self.Button_main_back.configure(background="#778899")
-        self.Button_main_back.configure(borderwidth="2")
-        self.Button_main_back.configure(compound='left')
-        self.Button_main_back.configure(cursor="fleur")
-        self.Button_main_back.configure(foreground="#f6f7f9")
-        self.Button_main_back.configure(highlightbackground="#778899")
-        self.Button_main_back.configure(relief="flat")
-        self.Button_main_back.configure(text='''Back''')
+        self.Button_main_back.configure(background="#f6f7f9")
+        self.Button_main_back.configure(relief='flat', highlightthickness=0)
+        self.photo = tk.PhotoImage(file=r"ic_back.png")
+        self.Button_main_back.configure(text='Back', image=self.photo)
+
+    def update(self) -> None:
+        try:
+            self.Label_setup_name.configure(text='''Current user: ''' + self.controller.gabai.name)
+        except:
+            self.Label_setup_name.configure(text='''Current user: Guest''')

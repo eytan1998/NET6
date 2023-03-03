@@ -6,7 +6,7 @@ from gabai import GabaiList, Gabai
 if __name__ == '__main__':
     x = SynagogueList()
     y = GabaiList()
-    y.gabai_list.append(Gabai("admin",-1243,1234,"054548111",[]))
+    y.gabai_list.append(Gabai("admin", 1, "1243", "054548111", []))
     jsonpickle.set_encoder_options('json', sort_keys=False, indent=4)
     frozen = jsonpickle.encode(x.synagogues)
     with open("data_syng.json", "w") as text_file:

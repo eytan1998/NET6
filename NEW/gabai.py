@@ -4,7 +4,7 @@ import jsonpickle
 
 
 class Gabai:
-    def __init__(self, name, gabai_id: int, password, phone, synagogue_list) -> None:
+    def __init__(self, name:str, gabai_id: int, password:str, phone:str, synagogue_list) -> None:
         self.name = name
         self.gabai_id = gabai_id
         self.password = password

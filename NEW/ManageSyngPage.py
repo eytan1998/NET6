@@ -71,18 +71,14 @@ class ManageSyngPage(tk.Frame):
         self.Button_mngsyng_del.configure(relief="flat")
         self.Button_mngsyng_del.configure(text='''Del''')
 
+
         self.Button_mngsyng_back = tk.Button(self)
         self.Button_mngsyng_back.place(relx=0.0, rely=0.0, height=33, width=52)
-        self.Button_mngsyng_back.configure(activebackground="#5faeb6")
         self.Button_mngsyng_back.configure(command=lambda: proj_support.goto(controller, "MainPage"))
-        self.Button_mngsyng_back.configure(background="#778899")
-        self.Button_mngsyng_back.configure(borderwidth="2")
-        self.Button_mngsyng_back.configure(compound='left')
-        self.Button_mngsyng_back.configure(cursor="fleur")
-        self.Button_mngsyng_back.configure(foreground="#f6f7f9")
-        self.Button_mngsyng_back.configure(highlightbackground="#778899")
-        self.Button_mngsyng_back.configure(relief="flat")
-        self.Button_mngsyng_back.configure(text='''Back''')
+        self.Button_mngsyng_back.configure(background="#f6f7f9")
+        self.Button_mngsyng_back.configure(relief='flat', highlightthickness=0)
+        self.photo = tk.PhotoImage(file=r"ic_back.png")
+        self.Button_mngsyng_back.configure(text='Back', image=self.photo)
 
     def update(self) -> None:
         proj_support.display_syng_list(self.controller, self.Scrolledlistbox_mngsyng)

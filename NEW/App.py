@@ -46,7 +46,7 @@ class App(tk.Tk):
 
     def show_frame(self, page_name):
         frame = self.frames[page_name]
-        if page_name in ("ManageSyngPage", "ViewSyngPage", "ManageGabaiPage", "ViewGabaiPage", "QueryPage"):
+        if page_name in ("MainPage","ManageSyngPage", "ViewSyngPage", "ManageGabaiPage", "ViewGabaiPage", "QueryPage"):
             frame.update()
         frame.tkraise()
 
