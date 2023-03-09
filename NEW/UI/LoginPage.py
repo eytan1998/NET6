@@ -1,8 +1,8 @@
 import tkinter as tk  # python 3
 from tkinter import ttk, PhotoImage
 
-import proj_support
-from proj_support import _style_code
+from UI import proj_support
+from UI.proj_support import _style_code
 
 
 class LoginPage(tk.Frame):
@@ -108,5 +108,5 @@ class LoginPage(tk.Frame):
         self.Button_login_back.configure(command=lambda: proj_support.goto(controller, "SetUpPage"))
         self.Button_login_back.configure(background="#f6f7f9")
         self.Button_login_back.configure(relief='flat', highlightthickness=0)
-        self.photo = PhotoImage(file=r"ic_back.png")
+        self.photo = PhotoImage(file=r"UI/ic_back.png")
         self.Button_login_back.configure(text='Back', image=self.photo)

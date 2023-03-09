@@ -1,9 +1,8 @@
 import tkinter as tk  # python 3
 from tkinter import ttk
 
-import proj_support
-from proj_support import _style_code
-
+from UI import proj_support
+from UI.proj_support import _style_code
 
 
 class SetUpPage(tk.Frame):
@@ -70,7 +69,7 @@ class SetUpPage(tk.Frame):
         self.Button_setup_connect.configure(background="#778899")
         self.Button_setup_connect.configure(borderwidth="2")
         self.Button_setup_connect.configure(
-            command=lambda: proj_support.connect(controller, self.TEntry_DHCP_addres.get()))
+            command=lambda: proj_support.connect(controller, self.TEntry_DHCP_addres.get(),self.Log_setup))
         self.Button_setup_connect.configure(compound='left')
         self.Button_setup_connect.configure(disabledforeground="#b9b9bb")
         self.Button_setup_connect.configure(foreground="#f6f7f9")

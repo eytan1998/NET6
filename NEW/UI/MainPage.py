@@ -1,6 +1,6 @@
 import tkinter as tk  # python 3
 
-import proj_support
+from UI import proj_support
 
 
 class MainPage(tk.Frame):
@@ -75,7 +75,7 @@ class MainPage(tk.Frame):
         self.Button_main_back.configure(command=lambda: proj_support.goto(controller, "LoginPage"))
         self.Button_main_back.configure(background="#f6f7f9")
         self.Button_main_back.configure(relief='flat', highlightthickness=0)
-        self.photo = tk.PhotoImage(file=r"ic_back.png")
+        self.photo = tk.PhotoImage(file=r"UI/ic_back.png")
         self.Button_main_back.configure(text='Back', image=self.photo)
 
     def update(self) -> None:

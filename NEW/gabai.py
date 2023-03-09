@@ -28,7 +28,7 @@ class Gabai:
 class GabaiList:
     def __init__(self):
         self.gabai_list = list()
-        self.nextid = 1
+        self.nextid = 10
 
     def append(self, o) -> Gabai | None:
         if self.gabai_list.__contains__(o): return None
@@ -69,15 +69,15 @@ class GabaiList:
     def write_json(self) -> None:
         jsonpickle.set_encoder_options('json', sort_keys=False, indent=4)
         frozen = jsonpickle.encode(self.gabai_list)
-        with open('data_gabai.json', "w") as text_file:
+        with open('Data/data_gabai.json', "w") as text_file:
             print(frozen, file=text_file)
-        with open("index_gabai.txt", "w") as text_file:
+        with open("Data/index_gabai.txt", "w") as text_file:
             print(str(self.nextid), file=text_file)
 
     def read_json(self) -> None:
-        file = open('data_gabai.json', "r")
+        file = open('Data/data_gabai.json', "r")
         self.gabai_list = jsonpickle.decode(file.read())
-        file = open("index_gabai.txt", "r")
+        file = open("Data/index_gabai.txt", "r")
         self.nextid = int(file.readline())
 
     def __str__(self):

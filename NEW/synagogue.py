@@ -28,8 +28,83 @@ class Nosah(IntEnum):
 
 class City(IntEnum):
     NULL = 0
-    ALL = 1
-    JERULEAM = 2
+    Afula = 1
+    Akko = 2
+    Arad = 3
+    Ariel = 4
+    Ashdod = 5
+    Ashkelon = 6
+    Baqa = 7
+    Bat_Yam = 9
+    Beer_Sheva = 11
+    Beit_Shean = 13
+    Beit_Shemesh = 15
+    Betar = 16
+    Illit = 17
+    Bnei = 18
+    Berak = 19
+    Dimona = 20
+    Eilat = 21
+    Givatayim = 22
+    Hadera = 23
+    Haifa = 24
+    Harish = 25
+    Herzliya = 26
+    Hod_HaSharon = 28
+    Holon = 29
+    Jerusalem = 30
+    Karmiel = 31
+    Kfar_Sava = 33
+    Kiryat_Ata = 35
+    Kiryat_Bialik = 37
+    Kiryat_Gat = 39
+    Kiryat_Malachi = 41
+    Kiryat_Motzkin = 43
+    Kiryat_Ono = 45
+    Kiryat_Shemone = 47
+    Kiryat_Yam = 49
+    Lod = 50
+    Maale = 51
+    Adumim = 52
+    Maalot_Tarshiha = 54
+    Migdal = 55
+    HaEmek = 56
+    Modiin = 57
+    Nahariya = 58
+    Nazareth = 59
+    Nes_Ziona = 61
+    Nesher = 62
+    Netanya = 63
+    Netivot = 64
+    Nof_Hagalil = 66
+    Ofakim = 67
+    Or_Akiva = 69
+    Or_Yehuda = 71
+    Petah = 72
+    Tikva = 73
+    Qalansawe = 74
+    Raanana = 75
+    Rahat = 76
+    Ramat_Hasharon = 78
+    Ramat_Gan = 79
+    Ramla = 80
+    Rehovot = 81
+    Rishon_Lezion = 83
+    Rosh_Haayin = 85
+    Sakhnin = 86
+    Sderot = 87
+    Shefaram = 88
+    Taibeh = 89
+    Tamra = 90
+    Tel_Aviv = 91
+    Tiberias = 92
+    Tira = 93
+    Tirat_Carmel = 95
+    Tsfat = 96
+    Umm_al_Fahm = 97
+    Yavne = 98
+    Yehud_Monosson = 99
+    Yokneam = 100
 
     @staticmethod
     def getAll():
@@ -78,7 +153,7 @@ class Synagogue:
 class SynagogueList:
     def __init__(self):
         self.synagogues = list()
-        self.nextid = 1
+        self.nextid = 10
 
     def append(self, synagogue) -> Synagogue | None:
         if self.synagogues.__contains__(synagogue): return None
@@ -149,15 +224,16 @@ class SynagogueList:
     def write_json(self) -> None:
         jsonpickle.set_encoder_options('json', sort_keys=False, indent=4)
         frozen = jsonpickle.encode(self.synagogues)
-        with open("data_syng.json", "w") as text_file:
+        with open("Data/data_syng.json", "w") as text_file:
             print(frozen, file=text_file)
-        with open("index_syng.txt", "w") as text_file:
+        with open("Data/index_syng.txt", "w") as text_file:
             print(str(self.nextid), file=text_file)
 
     def read_json(self) -> None:
-        file = open("data_syng.json", "r")
+
+        file = open("Data/data_syng.json", "r")
         self.synagogues = jsonpickle.decode(file.read())
-        file = open("index_syng.txt", "r")
+        file = open("Data/index_syng.txt", "r")
         self.nextid = int(file.readline())
 
     def __str__(self):

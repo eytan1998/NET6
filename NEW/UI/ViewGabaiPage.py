@@ -1,9 +1,9 @@
 import tkinter as tk
 from tkinter import ttk, END
 
-import proj_support
+from UI import proj_support
+from UI.proj_support import _style_code
 from gabai import Gabai
-from proj_support import _style_code
 
 
 class ViewGabaiPage(tk.Frame):
@@ -124,7 +124,7 @@ class ViewGabaiPage(tk.Frame):
         self.Button_viewgabai_back.configure(command=lambda: proj_support.goto(self.controller, "ManageGabaiPage"))
         self.Button_viewgabai_back.configure(background="#f6f7f9")
         self.Button_viewgabai_back.configure(relief='flat', highlightthickness=0)
-        self.photo = tk.PhotoImage(file=r"ic_back.png")
+        self.photo = tk.PhotoImage(file=r"UI/ic_back.png")
         self.Button_viewgabai_back.configure(text='Back', image=self.photo)
 
     def update(self) -> None:

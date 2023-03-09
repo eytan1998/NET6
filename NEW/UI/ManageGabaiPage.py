@@ -1,8 +1,8 @@
 import tkinter as tk
 
-import proj_support
-from proj_support import _style_code
-from ScrolledListBox import ScrolledListBox
+from UI import proj_support
+from UI.ScrolledListBox import ScrolledListBox
+from UI.proj_support import _style_code
 
 
 class ManageGabaiPage(tk.Frame):
@@ -52,7 +52,7 @@ class ManageGabaiPage(tk.Frame):
         self.Button_mngabai_del.configure(activebackground="beige")
         self.Button_mngabai_del.configure(background="#778899")
         self.Button_mngabai_del.configure(borderwidth="2")
-        self.Button_mngabai_del.configure(command=lambda: proj_support.del_gabai(controller,self.Scrolledlistbox_mngabai))
+        self.Button_mngabai_del.configure(command=lambda: proj_support.del_gabai(controller, self.Scrolledlistbox_mngabai))
         self.Button_mngabai_del.configure(compound='left')
         self.Button_mngabai_del.configure(disabledforeground="#b9b9bb")
         self.Button_mngabai_del.configure(foreground="#f6f7f9")
@@ -84,7 +84,7 @@ class ManageGabaiPage(tk.Frame):
         self.Button_mngabai_back.configure(command=lambda: proj_support.goto(controller, "MainPage"))
         self.Button_mngabai_back.configure(background="#f6f7f9")
         self.Button_mngabai_back.configure(relief='flat', highlightthickness=0)
-        self.photo = tk.PhotoImage(file=r"ic_back.png")
+        self.photo = tk.PhotoImage(file=r"UI/ic_back.png")
         self.Button_mngabai_back.configure(text='Back', image=self.photo)
 
     def update(self) -> None:

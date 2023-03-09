@@ -2,9 +2,10 @@ import tkinter as tk
 import tkinter.ttk as ttk
 from tkinter import END
 
-import proj_support
-from ScrolledListBox import ScrolledListBox
-from proj_support import _style_code
+from UI import proj_support
+from UI.ScrolledListBox import ScrolledListBox
+from UI.proj_support import _style_code
+
 from synagogue import Nosah
 from synagogue import City
 
@@ -135,7 +136,7 @@ class QueryPage(tk.Frame):
         self.Button_query_back.configure(command=lambda: proj_support.goto(controller, "MainPage"))
         self.Button_query_back.configure(background="#f6f7f9")
         self.Button_query_back.configure(relief='flat', highlightthickness=0)
-        self.photo = tk.PhotoImage(file=r"ic_back.png")
+        self.photo = tk.PhotoImage(file=r"UI/ic_back.png")
         self.Button_query_back.configure(text='Back', image=self.photo)
 
     def update(self) -> None:

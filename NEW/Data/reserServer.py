@@ -20,3 +20,10 @@ if __name__ == '__main__':
         print(frozen, file=text_file)
     with open("index_gabai.txt", "w") as text_file:
         print(str(y.nextid), file=text_file)
+
+
+'''
+
+
+
+'''

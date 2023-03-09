@@ -1,8 +1,8 @@
 import tkinter as tk
 
-import proj_support
-from proj_support import _style_code
-from ScrolledListBox import ScrolledListBox
+from UI import proj_support
+from UI.ScrolledListBox import ScrolledListBox
+from UI.proj_support import _style_code
 
 
 class ManageSyngPage(tk.Frame):
@@ -62,7 +62,7 @@ class ManageSyngPage(tk.Frame):
         self.Button_mngsyng_del.configure(activebackground="#5faeb6")
         self.Button_mngsyng_del.configure(background="#778899")
         self.Button_mngsyng_del.configure(borderwidth="2")
-        self.Button_mngsyng_del.configure(command=lambda: proj_support.del_syng(controller,self.Scrolledlistbox_mngsyng))
+        self.Button_mngsyng_del.configure(command=lambda: proj_support.del_syng(controller, self.Scrolledlistbox_mngsyng))
         self.Button_mngsyng_del.configure(compound='left')
         self.Button_mngsyng_del.configure(cursor="fleur")
         self.Button_mngsyng_del.configure(disabledforeground="#b9b9bb")
@@ -77,7 +77,7 @@ class ManageSyngPage(tk.Frame):
         self.Button_mngsyng_back.configure(command=lambda: proj_support.goto(controller, "MainPage"))
         self.Button_mngsyng_back.configure(background="#f6f7f9")
         self.Button_mngsyng_back.configure(relief='flat', highlightthickness=0)
-        self.photo = tk.PhotoImage(file=r"ic_back.png")
+        self.photo = tk.PhotoImage(file=r"UI/ic_back.png")
         self.Button_mngsyng_back.configure(text='Back', image=self.photo)
 
     def update(self) -> None:

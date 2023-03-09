@@ -10,9 +10,9 @@ DEFAULT_SERVER_PORT = 6666
 BUFFER_SIZE = 65555
 
 '''
- python3 protocol "length:16, kind:3, nosah:4, city :9, Window:16, padding:16 data:256"
+ python3 protocol "Status_code:16, kind:3, nosah:4, city :9, data:256"
  
- * Total Length (16 bits = 2 bytes):
+ * Status_code (16 bits = 2 bytes):
     The total length of the packet, in bytes (including the header and the data)
     This minimum value is 8 bytes (header only)
 
@@ -59,9 +59,7 @@ BUFFER_SIZE = 65555
  0                   1                   2                   3  
  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|             length            | kind|  nosah|       city      |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|             Window            |             padding           |
+|          Status_code          | kind|  nosah|       city      |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 |                                                               |
 +                                                               +
@@ -70,10 +68,9 @@ BUFFER_SIZE = 65555
 |                                                               |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
-Length: 16 bits = 2 bytes -> H
+Status_code: 16 bits = 2 bytes -> H
 kind + nosah + city: 3 bits + 4 bits + 9 bits = 2 byte -> H
-Window: 16 bits = 2 bytes -> H
-padding: 16 bits = 2 bytes -> H
+
 
 
 
@@ -98,65 +95,52 @@ C                  S
             |->    view specific synagogue (UI)
         
 
-Gabai: (admin)
-    name
-    phone
-    id
-    pass
-    id_list
-    
-Synagogue:
-    Gabai?
-    title
-    nosah
-    city
-    id
-    
 '''
 
-
-# TODO
-# TODO cc
-# TODO not response ,timeout
-# TODO
-# TODO
-# TODO
-# TODO fc
 
 class Kind(enum.Enum):
     REQUEST_LOGIN = 0
     REQUEST_BY_QUERY = 1
-    REQUEST_BY_IDS = 2
+    REQUEST_SYNG_BY_ID = 2
     REQUEST_ALL_GABAI = 3
-    SET_SYNAGOGUE = 4
-    SET_GABAI = 5
-    RESPONSE = 6
-    ACK_TO_RESPONSE = 7
+    REQUEST_GABAI_BY_ID = 4
+    SET_SYNAGOGUE = 5
+    SET_GABAI = 6
+    RESPONSE = 7
 
 
-class mHeader:
-    HEADER_FORMAT: typing.Final[str] = '!HHHH'
+class Status_code(enum.Enum):
+    OK = 0
+    CORRECT_LOGIN = 1
+    WRONG_ID = 2
+    WRONG_PASSWORD = 3
+    NOT_FOUND = 4
+    ERROR = 5
+
+
+class AppHeader:
+    HEADER_FORMAT: typing.Final[str] = '!HH'
     HEADER_MIN_LENGTH: typing.Final[int] = struct.calcsize(HEADER_FORMAT)
     # Big enough to hold the header and a lot of data
     HEADER_MAX_LENGTH: typing.Final[int] = 2 ** 16
-    HEADER_MAX_DATA_LENGTH: typing.Final[int] = HEADER_MAX_LENGTH - \
-                                                HEADER_MIN_LENGTH
+    HEADER_MAX_DATA_LENGTH: typing.Final[int] = HEADER_MAX_LENGTH - HEADER_MIN_LENGTH
 
     # 16 bits -> 2**16 possible values -> 0 to 2**16 - 1
     MAX_CACHE_CONTROL: typing.Final[int] = 2 ** 16 - 1
 
     # python3 protocol "length:16, kind:3, nosah:4, city :9, Window:16, padding:16 data:256"
 
-    def __init__(self, length: typing.Optional[int], kind: int, nosah: int, city: int, window: int, padding: int,
+    def __init__(self, status_code: int, kind: int, nosah: int, city: int,
                  data: bytes = b'') -> None:
-        self.length = length
-        if self.length is None:
-            self.length = self.HEADER_MIN_LENGTH + len(data)
-        if not (self.HEADER_MIN_LENGTH <= self.length <= self.HEADER_MAX_LENGTH):
-            raise ValueError(
-                f'Invalid total length: {self.length} (must be between {self.HEADER_MIN_LENGTH} and {self.HEADER_MAX_LENGTH} bytes inclusive)')
-        elif self.length != self.HEADER_MIN_LENGTH + len(data):
-            warnings.warn(f'The total length ({self.length}) does not match the length of the data ({len(data)})')
+        # self.length = length
+        # if self.length is None:
+        #     self.length = self.HEADER_MIN_LENGTH + len(data)
+        # if not (self.HEADER_MIN_LENGTH <= self.length <= self.HEADER_MAX_LENGTH):
+        #     raise ValueError(
+        #         f'Invalid total length: {self.length} (must be between {self.HEADER_MIN_LENGTH} and {self.HEADER_MAX_LENGTH} bytes inclusive)')
+        # elif self.length != self.HEADER_MIN_LENGTH + len(data):
+        #     warnings.warn(f'The total length ({self.length}) does not match the length of the data ({len(data)})')
+        self.status_code = status_code
         self.kind = kind
         self.city = city
         self.nosah = nosah
@@ -164,13 +148,14 @@ class mHeader:
             warnings.warn(f'The nosah ({Nosah(self.nosah)}) is not 0 for a not query')
             self.nosah = 0
         self.checksum = 0
-        self.window = window
-        self.padding = padding
 
         self.data = data
         if len(self.data) > self.HEADER_MAX_DATA_LENGTH:
             raise ValueError(
                 f'Invalid data length: {len(self.data)} (must be at most {self.HEADER_MAX_DATA_LENGTH} bytes)')
+
+    def get_data(self) -> bytes:
+        return self.data
 
     def pack_flags(self, kind, nosah, city):
         return (kind << 13) | (nosah << 9) | city
@@ -184,18 +169,17 @@ class mHeader:
         return kind, nosah, city
 
     def pack(self) -> bytes:
-        return struct.pack(self.HEADER_FORMAT, self.length,
-                           self.pack_flags(self.kind, self.nosah, self.city), self.window,
-                           self.padding) + self.data
+        return struct.pack(self.HEADER_FORMAT, self.status_code,
+                           self.pack_flags(self.kind, self.nosah, self.city)) + self.data
 
     @classmethod
-    def unpack(cls, data: bytes) -> 'mHeader':
-        if len(data) < cls.HEADER_MIN_LENGTH:
-            raise ValueError(f'The data is too short ({len(data)} bytes) to be a valid header')
-        length, flags, window, padding = struct.unpack(cls.HEADER_FORMAT, data[:cls.HEADER_MIN_LENGTH])
+    def unpack(cls, data: bytes) -> 'AppHeader':
+        # if len(data) < cls.HEADER_MIN_LENGTH:
+        #     print(f'The data is too short ({len(data)} bytes) to be a valid header')
+        status_code, flags = struct.unpack(cls.HEADER_FORMAT, data[:cls.HEADER_MIN_LENGTH])
         kind, nosah, city = cls.unpack_flags(flags)
-        return cls(length=length, kind=kind,
-                   nosah=nosah, city=city, window=window, padding=padding, data=data[cls.HEADER_MIN_LENGTH:])
+        return cls(status_code=status_code, kind=kind,
+                   nosah=nosah, city=city, data=data[cls.HEADER_MIN_LENGTH:])
 
     def __str__(self):
-        return f'{self.__class__.__name__}( total_length={self.length}, kind={Kind(self.kind)}, nosah={Nosah(self.nosah)}, City={City(self.city)}, window={self.window}, padding={self.padding}, data={self.data.decode()})'
+        return f'{self.__class__.__name__}( status_code={Status_code(self.status_code)}, kind={Kind(self.kind)}, nosah={Nosah(self.nosah)}, City={City(self.city)}, data={self.data.decode()})'

@@ -6,10 +6,14 @@
 #    Feb 28, 2023 11:07:08 AM IST  platform: Linux
 
 import sys
+import tkinter
 from tkinter import ttk, ANCHOR, END, messagebox
 
-import UDPclient
-from ScrolledListBox import ScrolledListBox
+import Handleclient
+import api
+from DNS.DNSclient import sendDNS
+from RUDP.RUDPclient import RUDPclient
+from UI.ScrolledListBox import ScrolledListBox
 from gabai import Gabai
 from synagogue import Synagogue, Nosah, City
 
@@ -57,12 +61,21 @@ def goto(controller, to):
     controller.show_frame(to)
 
 
-def connect(controller, domain):
-    # ans = sendDNS(domain)
-    # if ans is None:
-    #     return
-    # else:
-    goto(controller, "LoginPage")
+def connect(controller, domain, output: tkinter.Text):
+    domain = 'm.com'
+    output.delete(1.0, END)
+    ans = sendDNS(domain)
+    if ans is None:
+        output.insert(END, "Didn't get answer from dns server")
+        return
+    else:
+        output.insert(END, "Got answer " + str(ans))
+        output.insert(END, "\nTry to connect...")
+        output.update()
+        server_address = (ans, 9879)
+        controller.connection = RUDPclient(server_address)
+        controller.connection.connect()
+        goto(controller, "LoginPage")
 
 
 def login_guest(controller):
@@ -72,14 +85,14 @@ def login_guest(controller):
 
 def login_gabai(controller, mID, mPassword):
     # print("id: " + mID + "\npassword: " + mPassword)
-    ans = UDPclient.send_login(('127.0.0.1', 6666), mID, mPassword)
+    ans = Handleclient.send_login(controller.connection, mID, mPassword)
     if ans is None:
         messagebox.showinfo("Warning", "[!] bad connection")
-    elif ans == 'wrong_password' or ans == 'wrong_id':
+    elif ans.status_code == api.Status_code.WRONG_ID.value or ans.status_code == api.Status_code.WRONG_PASSWORD.value:
         messagebox.showinfo("Warning", "[!] wrong id or password")
-    else:
-        print("[+] current")
-        controller.gabai = Gabai.fromJSON(ans)
+    elif ans.status_code == api.Status_code.CORRECT_LOGIN.value:
+        # print("[+] current")
+        controller.gabai = Gabai.fromJSON(ans.data.decode())
         goto(controller, "MainPage")
 
 
@@ -101,12 +114,13 @@ def goto_manage_syng(controller):
 def send_query(controller, name, nosah, city, Scrolledlistbox_query: ScrolledListBox):
     Scrolledlistbox_query.delete(0, END)
     controller.syng_list = []
-    ans = UDPclient.send_by_query(('127.0.0.1', 6666), name, nosah.value, city.value)
+    ans = Handleclient.send_by_query(controller.connection, name, nosah.value, city.value)
     if ans is None:
         messagebox.showinfo("Warning", "[!] No result")
         return
     for iteam in ans:
-        ad = Synagogue.fromJSON(iteam)
+        # print(iteam)
+        ad = Synagogue.fromJSON(iteam.data)
         Scrolledlistbox_query.insert(END, str(ad.id_synagogue) + ":" + ad.name)
         controller.syng_list.append(ad)
 
@@ -139,7 +153,7 @@ def del_syng(controller, Scrolledlistbox_mngabai: ScrolledListBox):
             syng_to_del = x
             syng_to_del.name = ""
             break
-    ans = (UDPclient.send_edit_syng(('127.0.0.1', 6666), syng_to_del))
+    ans = Handleclient.send_edit_syng(controller.connection, syng_to_del)
     ans = int(ans)
     if ans == 0:
         Scrolledlistbox_mngabai.delete(ANCHOR)
@@ -156,7 +170,7 @@ def del_gabai(controller, Scrolledlistbox_mngabai):
             gabai_to_del = x
             gabai_to_del.name = ""
             break
-    ans = (UDPclient.send_edit_gabai(('127.0.0.1', 6666), gabai_to_del))
+    ans = Handleclient.send_edit_gabai(controller.connection, gabai_to_del)
     ans = int(ans)
     if ans == 0:
         Scrolledlistbox_mngabai.delete(ANCHOR)
@@ -184,7 +198,7 @@ def edit_gabai(controller, Scrolledlistbox_mngabai):
 
 
 def save_syng(controller, syng_to_edit: Synagogue):
-    ans = (UDPclient.send_edit_syng(('127.0.0.1', 6666), syng_to_edit))
+    ans = Handleclient.send_edit_syng(controller.connection, syng_to_edit)
     ans = int(ans)
     if ans != -1 and ans != 0:
         if ans not in controller.gabai.synagogue_list:
@@ -196,7 +210,7 @@ def save_gabai(controller, gabai_to_edit: Gabai):
     if gabai_to_edit.gabai_id == 1:
         messagebox.showinfo("Warning", "[!] cant edit admin")
         return
-    ans = (UDPclient.send_edit_gabai(('127.0.0.1', 6666), gabai_to_edit))
+    ans = Handleclient.send_edit_gabai(controller.connection, gabai_to_edit)
     ans = int(ans)
     # if ans != -1 and ans != 0:
     # controller.gabai.synagogue_list.append(ans)
@@ -206,13 +220,13 @@ def save_gabai(controller, gabai_to_edit: Gabai):
 def display_syng_list(controller, Scrolledlistbox_mngsyng):
     Scrolledlistbox_mngsyng.delete(0, END)
     # print(controller.gabai.synagogue_list)
-    ans = UDPclient.send_request_by_ids(('127.0.0.1', 6666), controller.gabai.synagogue_list)
+    ans = Handleclient.send_request_syng_by_id(controller.connection, controller.gabai.synagogue_list)
     controller.syng_list = []
     if ans is None:
         messagebox.showinfo("Warning", "[!] No result")
         return
     for item in ans:
-        ad = Synagogue.fromJSON(item)
+        ad = Synagogue.fromJSON(item.data)
         Scrolledlistbox_mngsyng.insert(END, str(ad.id_synagogue) + ":" + ad.name)
         controller.syng_list.append(ad)
 
@@ -220,13 +234,13 @@ def display_syng_list(controller, Scrolledlistbox_mngsyng):
 def display_gabai_list(controller, Scrolledlistbox_mngabai):
     Scrolledlistbox_mngabai.delete(0, END)
     # print(controller.gabai.synagogue_list)
-    ans = UDPclient.send_request_all_gabai(('127.0.0.1', 6666))
+    ans = Handleclient.send_request_all_gabai(controller.connection)
     controller.gabai_list = []
     if ans is None:
         messagebox.showinfo("Warning", "[!] No result")
         return
     for item in ans:
-        ad = Gabai.fromJSON(item)
+        ad = Gabai.fromJSON(item.data)
         if ad.gabai_id == 1: continue
         Scrolledlistbox_mngabai.insert(END, str(ad.gabai_id) + ":" + ad.name)
         controller.gabai_list.append(ad)

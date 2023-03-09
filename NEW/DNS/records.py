@@ -19,7 +19,7 @@ opcode: It is a 4-bit subfield that defines the type of query carried by a messa
     The value 1 corresponds to an inverse of query that implies finding the domain name from the IP Address. 
     The value 2 refers to the server status request. The value 3 specifies the status reserved and therefore not used.
 AA: It is an Authoritative Answer. It is a 1-bit subfield that specifies the server is authoritative if the value is 1 otherwise it is non-authoritative for a 0 value.
-TC: It is Truncation. This is a 1-bit subfield that specifies if the length of the message exceeds the allowed length of 512 bytes, the message is truncated when using UDP services.
+TC: It is Truncation. This is a 1-bit subfield that specifies if the length of the message exceeds the allowed length of 512 bytes, the message is truncated when using RUDP services.
 RD: It is Recursion Desired. It is a 1-bit subfield that specifies if the value is set to 1 in the query message then the server needs to answer the query recursively. Its value is copied to the response message.
 RA: It is Recursion Available. It is a 1-bit subfield that specifies the availability of recursive response if the value is set to 1 in the response message.
 Zero: It is a 3-bit reserved subfield set to 0.
@@ -138,12 +138,12 @@ class record_list:
 
     def write_json(self):
         json_string = json.dumps([ob.__dict__ for ob in self.records], indent=4)
-        with open("records.json", "w") as file:
+        with open("DNS/records.json", "w") as file:
             file.write(json_string)
 
     def read_json(self):
         ans = list()
-        with open('records.json') as json_file:
+        with open("DNS/records.json") as json_file:
             json_data = json.load(json_file)
 
         for item in json_data:

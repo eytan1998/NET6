@@ -2,11 +2,11 @@ import tkinter as tk
 import tkinter.ttk as ttk
 from tkinter import END
 
+from UI.ScrolledListBox import ScrolledText
 from gabai import Gabai
 from synagogue import Nosah, City, Synagogue
-import proj_support
-from ScrolledListBox import ScrolledText
-from proj_support import _style_code
+from UI import proj_support
+from UI.proj_support import _style_code
 
 
 class ViewSyngPage(tk.Frame):
@@ -173,7 +173,7 @@ class ViewSyngPage(tk.Frame):
         self.Button_viewsyng_back.configure(command=lambda: proj_support.goto(controller, "QueryPage"))
         self.Button_viewsyng_back.configure(background="#f6f7f9")
         self.Button_viewsyng_back.configure(relief='flat', highlightthickness=0)
-        self.photo = tk.PhotoImage(file=r"ic_back.png")
+        self.photo = tk.PhotoImage(file=r"UI/ic_back.png")
         self.Button_viewsyng_back.configure(text='Back', image=self.photo)
 
     def update(self) -> None:
