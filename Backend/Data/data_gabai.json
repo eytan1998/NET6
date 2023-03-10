@@ -1,0 +1,22 @@
+[
+    {
+        "py/object": "Backend.Help.gabai.Gabai",
+        "name": "admin",
+        "gabai_id": 1,
+        "password": "1243",
+        "phone": "054548111",
+        "synagogue_list": [
+            10
+        ]
+    },
+    {
+        "py/object": "Backend.Help.gabai.Gabai",
+        "name": "oz",
+        "gabai_id": 10,
+        "password": "123",
+        "phone": "412312",
+        "synagogue_list": [
+            11
+        ]
+    }
+]

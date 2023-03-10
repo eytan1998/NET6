@@ -1,0 +1,80 @@
+[
+    {
+        "py/object": "Backend.Help.synagogue.Synagogue",
+        "name": "123",
+        "id_synagogue": 11,
+        "nosah": {
+            "py/reduce": [
+                {
+                    "py/type": "Backend.Help.synagogue.Nosah"
+                },
+                {
+                    "py/tuple": [
+                        3
+                    ]
+                }
+            ]
+        },
+        "city": {
+            "py/reduce": [
+                {
+                    "py/type": "Backend.Help.synagogue.City"
+                },
+                {
+                    "py/tuple": [
+                        2
+                    ]
+                }
+            ]
+        },
+        "prayers": "123\n",
+        "gabai": {
+            "py/object": "Backend.Help.gabai.Gabai",
+            "name": "oz",
+            "gabai_id": 10,
+            "password": "123",
+            "phone": "412312",
+            "synagogue_list": []
+        }
+    },
+    {
+        "py/object": "Backend.Help.synagogue.Synagogue",
+        "name": "asd",
+        "id_synagogue": 10,
+        "nosah": {
+            "py/reduce": [
+                {
+                    "py/type": "Backend.Help.synagogue.Nosah"
+                },
+                {
+                    "py/tuple": [
+                        4
+                    ]
+                }
+            ]
+        },
+        "city": {
+            "py/reduce": [
+                {
+                    "py/type": "Backend.Help.synagogue.City"
+                },
+                {
+                    "py/tuple": [
+                        4
+                    ]
+                }
+            ]
+        },
+        "prayers": "asd\n\n\n",
+        "gabai": {
+            "py/object": "Backend.Help.gabai.Gabai",
+            "name": "oz",
+            "gabai_id": 10,
+            "password": "123",
+            "phone": "412312",
+            "synagogue_list": [
+                11
+            ]
+        }
+    }
+]

@@ -1,13 +1,18 @@
-import socket
+from scapy.layers.dns import DNS, DNSQR, DNSRR
+from scapy.layers.inet import IP, UDP
+from scapy.sendrecv import sr1
 
-if __name__ == '__main__':
-    client_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    client_socket.settimeout(5.0)
-    message = input()
-    addr = ("127.0.0.1", 6547)
-    client_socket.sendto(message.encode(), addr)
-    try:
-        data, server = client_socket.recvfrom(1024)
-        print(data.decode())
-    except socket.timeout:
-        print('REQUEST TIMED OUT')
+
+def sendDNS(dns_server,domain):
+    ans = sr1(IP(dst=dns_server) / UDP(sport=7654, dport=53) / DNS(rd=1, qd=DNSQR(qname=domain, qtype="A")))
+    if ans is not None and ans.haslayer(DNS):
+        if ans.getlayer(DNSRR):
+            try:
+                # print(ans.getlayer(DNS).an.rdata.decode())
+                return ans.getlayer(DNS).an.rdata.decode()
+            except:
+                # print(ans.getlayer(DNS).an.rdata)
+                return ans.getlayer(DNS).an.rdata
+    else:
+        # print("[-] no answer")
+        return None
