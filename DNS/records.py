@@ -83,35 +83,39 @@ class record:
 class record_list:
     def __init__(self, time_to_save_in_minuts):
         self.records = list()
-        self.to_late = time_to_save_in_minuts * 60 * 1000
+        self.to_late = time_to_save_in_minuts * 60 # to secounds
 
     def get_answer(self, packet):
-        # print("[+] Got packet :" + str(list(packet)) + " ")
-        qname = packet.getlayer(DNS).qd.qname
         domain = packet.getlayer(DNS).qd.qname.decode()
 
         temp = self.is_contains(domain)
-        # if got up to date record
+        # if got up-to-date record
+        # return
         if temp[0] == contains.UP_TO_DATE:
+            # know time() + to_late >= tll
             print('[!] Retrieved from table.\nTime until expire is: ' +
-                  str((self.to_late - (time() - temp[1].ttl)) / 1000 / 60) + " minutes for " + (domain) + " domain")
+                  str((self.to_late - (time() - temp[1].ttl)) / 60) + " minutes for " + (domain) + " domain")
             return self.cnstractDNSRR(packet, domain, temp)
-
+        # not up to date in record ask google
         else:
+            #ask google
             response = sr1(
                 IP(dst="8.8.8.8") / UDP(sport=RandShort(), dport=53) / DNS(rd=1, qd=DNSQR(qname=domain, qtype="A")))
+            # if didnt get answer
             if response is None or response.getlayer(DNS).an is None:
+                # return expire record
                 if temp[0] == contains.EXPAIRE:
-                    print('[-] Sending expire record of ' + (domain))
+                    print('[-] Sending expire record of ' + domain)
                     return self.cnstractDNSRR(packet, domain, temp)
+                # return that got no answer
                 else:
-                    print('[-] Cant get ip of ' + (domain) + " domain")
+                    print('[-] Cant get ip of ' + domain + " domain")
                     response.getlayer(IP).src = DNS_SERVER_IP
                     response.getlayer(IP).dst = packet[IP].src
                     response.getlayer(UDP).sport = 53
                     response.getlayer(UDP).dport = packet[UDP].sport
                     return response
-                    # return self.cnstractDNSRR(packet, domain, temp)
+            # got answer from google
             else:
                 rdata = response.getlayer(DNS).an.rdata
                 print("[+] Got answer " + rdata + " and save it")
@@ -150,6 +154,7 @@ class record_list:
             ans.append(record(item['domain'], item['address'], item['ttl']))
         self.records = ans
 
+    #for constract DNS packet
     def cnstractDNSRR(self, packet, domain, iscontains):
         if iscontains[0] == contains.UP_TO_DATE:
             return IP(src=DNS_SERVER_IP, dst=packet[IP].src) / UDP(dport=7654, sport=53) / DNS(qr=1, opcode=0, aa=0,

@@ -1,3 +1,4 @@
+import argparse
 import atexit
 
 from scapy.layers.dns import DNS
@@ -8,7 +9,7 @@ from records import record_list
 
 IFACE = "lo"  # Or your default interface
 DNS_SERVER_IP = "127.0.0.1"  # Your local IP
-BPF_FILTER = f"udp dst port 53 and ip dst {DNS_SERVER_IP}"
+
 
 
 def exit_handler():
@@ -27,7 +28,21 @@ def querysniff(pkt):
 
 
 if __name__ == '__main__':
+    arg_parser = argparse.ArgumentParser(
+        description='DNS Server.')
+
+    arg_parser.add_argument('-i', '--iface', type=str,
+                            default=IFACE, help='The interface to sniff on.')
+    arg_parser.add_argument('-H', '--host', type=str,
+                            default=DNS_SERVER_IP, help='The host to listen on.')
+    args = arg_parser.parse_args()
+    IFACE = args.iface
+    DNS_SERVER_IP = args.host
+
     records_list = record_list(5)
     records_list.read_json()
     atexit.register(exit_handler)
+    print("[+] DNS server is running...")
+    print("[+] sniff on \"" + IFACE + "\", Ip: " + DNS_SERVER_IP+".")
+    BPF_FILTER = f"udp dst port 53 and ip dst {DNS_SERVER_IP}"
     sniff(filter=BPF_FILTER, prn=querysniff, iface=IFACE)

@@ -76,5 +76,88 @@
                 11
             ]
         }
+    },
+    {
+        "py/object": "Backend.Help.synagogue.Synagogue",
+        "name": "sssssssssssssss",
+        "id_synagogue": 12,
+        "nosah": {
+            "py/reduce": [
+                {
+                    "py/type": "Backend.Help.synagogue.Nosah"
+                },
+                {
+                    "py/tuple": [
+                        0
+                    ]
+                }
+            ]
+        },
+        "city": {
+            "py/reduce": [
+                {
+                    "py/type": "Backend.Help.synagogue.City"
+                },
+                {
+                    "py/tuple": [
+                        0
+                    ]
+                }
+            ]
+        },
+        "prayers": "123123e12e\n\n",
+        "gabai": {
+            "py/object": "Backend.Help.gabai.Gabai",
+            "name": "admin",
+            "gabai_id": 1,
+            "password": "1243",
+            "phone": "054548111",
+            "synagogue_list": [
+                10,
+                12
+            ]
+        }
+    },
+    {
+        "py/object": "Backend.Help.synagogue.Synagogue",
+        "name": "new beit knecet",
+        "id_synagogue": 13,
+        "nosah": {
+            "py/reduce": [
+                {
+                    "py/type": "Backend.Help.synagogue.Nosah"
+                },
+                {
+                    "py/tuple": [
+                        1
+                    ]
+                }
+            ]
+        },
+        "city": {
+            "py/reduce": [
+                {
+                    "py/type": "Backend.Help.synagogue.City"
+                },
+                {
+                    "py/tuple": [
+                        91
+                    ]
+                }
+            ]
+        },
+        "prayers": "shahrit: 600,900\nminha: 14:00, 15:00\nhrvit: 19:00\nsihor 20:00\nharvit 2: 21:00\n\n",
+        "gabai": {
+            "py/object": "Backend.Help.gabai.Gabai",
+            "name": "admin",
+            "gabai_id": 1,
+            "password": "1243",
+            "phone": "054548111",
+            "synagogue_list": [
+                10,
+                12,
+                13
+            ]
+        }
     }
 ]

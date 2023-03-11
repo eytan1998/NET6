@@ -1,3 +1,4 @@
+import random
 import socket
 
 from Backend.Help import Handelserver
@@ -22,7 +23,7 @@ class RUDPserver:
         self.seq_num = 0
 
         # for more accurate
-        # self.seq_num = random.randint(100, 1000000)
+        self.seq_num = random.randint(100, 1000000)
 
     def accept(self):
         request = None

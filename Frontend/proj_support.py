@@ -1,4 +1,3 @@
-
 import sys
 import tkinter
 from tkinter import ttk, ANCHOR, END, messagebox
@@ -8,6 +7,7 @@ from Backend.RUDP.RUDPclient import RUDPclient
 from Backend.Help.app_packet import Status_code
 from Backend.Help.gabai import Gabai
 from Backend.Help.synagogue import Synagogue, Nosah, City
+from Backend.TCP.TCPclient import TCPclient
 from DNS.DNSclient import sendDNS
 from Frontend.ScrolledListBox import ScrolledListBox
 
@@ -55,8 +55,10 @@ def goto(controller, to):
 
 
 def connect(controller, domain, output: tkinter.Text):
-    output.delete(1.0, END)
-    dns_server_addr = "127.0.0.1"
+    output.delete(1.0, END)  # clean log
+    dns_server_addr = "127.0.0.1"  # TODO
+    output.insert(END, "Trying to connect to dns server :"+dns_server_addr+"\n")
+    output.update()
     ans = sendDNS(dns_server_addr, domain)
     if ans is None:
         output.insert(END, "Didn't get answer from dns server")
@@ -66,9 +68,12 @@ def connect(controller, domain, output: tkinter.Text):
         output.insert(END, "\nTry to connect...")
         output.update()
         server_address = (ans, DEFAULT_SERVER_PORT)
-        # TODO change to tcp instead of rudp
-        # controller.connection = TCPclient(server_address)
-        controller.connection = RUDPclient(server_address)
+
+        if controller.isTCP is None:
+            controller.connection = RUDPclient(server_address)
+        else:
+            controller.connection = TCPclient(server_address)
+
         ans = controller.connection.connect()
         if ans is None:
             output.insert(END, "\nCan't connect to " + str(server_address))
@@ -237,3 +242,11 @@ def display_gabai_list(controller, Scrolledlistbox_mngabai):
         if ad.gabai_id == 1: continue
         Scrolledlistbox_mngabai.insert(END, str(ad.gabai_id) + ":" + ad.name)
         controller.gabai_list.append(ad)
+
+
+def dicconnect(controller, togo):
+    try:
+        controller.connection.close()
+    except:
+        pass
+    goto(controller, togo)

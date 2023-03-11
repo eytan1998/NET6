@@ -3,6 +3,7 @@ import socket
 import threading
 
 from Backend.Help import Handelserver
+from Backend.Help.app_packet import AppHeader
 from Backend.RUDP.RUDPserver import RUDPserver
 from Backend.Help.gabai import GabaiList
 from Backend.Help.synagogue import SynagogueList
@@ -10,7 +11,7 @@ from Backend.Help.synagogue import SynagogueList
 BUFFER_SIZE = 65536
 DEFAULT_SERVER_HOST = "127.0.0.1"
 DEFAULT_SERVER_PORT = 30381
-TIME_OUT = 0.2
+TIME_OUT = 2
 
 the_synagogue_list = SynagogueList()
 the_gabi_list = GabaiList()
@@ -35,7 +36,7 @@ def TCPclient_handler(client_socket: socket.socket, client_address: tuple[str, i
         if not data:
             break
         try:
-            request = api.AppHeader.unpack(data)
+            request = AppHeader.unpack(data)
             response = Handelserver.process_request(request)
             response = response.pack()
             client_socket.sendall(response)
@@ -72,27 +73,18 @@ def TCPserver(host: str, port: int) -> None:
 def UDPserver(host: str, port: int) -> None:
     with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as server_socket:
         server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        server_socket.bind((host, port))
         server_socket.settimeout(TIME_OUT)
-        threads = []
+        server_socket.bind((host, port))
         print(f"Listening on {host}:{port}")
 
         while True:
             try:
-
                 connection = RUDPserver(server_socket)
                 connection.accept()
-
-                # Create a new thread to handle the client request
-                thread = threading.Thread(target=connection.receiveData)
-                thread.start()
-                threads.append(thread)
+                connection.receiveData()
             except KeyboardInterrupt:
                 print("Shutting down...")
                 break
-
-        for thread in threads:
-            thread.join()
 
 
 if __name__ == '__main__':
@@ -105,10 +97,13 @@ if __name__ == '__main__':
                             default=DEFAULT_SERVER_PORT, help='The port to listen on.')
     arg_parser.add_argument('-H', '--host', type=str,
                             default=DEFAULT_SERVER_HOST, help='The host to listen on.')
+    arg_parser.add_argument('--tcp', action=argparse.BooleanOptionalAction, help='Do the connection tcp instead of '
+                                                                                 'rudp.')
 
     args = arg_parser.parse_args()
     host = args.host
     port = args.port
-
-    # TCPserver(host, port)
-    UDPserver(host, port)
+    if args.tcp is None:
+        UDPserver(host, port)
+    else:
+        TCPserver(host, port)

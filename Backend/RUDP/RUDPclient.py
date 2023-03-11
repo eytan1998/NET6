@@ -1,3 +1,4 @@
+import random
 import socket
 
 from Backend.RUDP.rudp_packet import RUDP_Header
@@ -5,7 +6,7 @@ from Backend.Help.app_packet import AppHeader
 
 MAX_BUFFER = 65535
 SEGMENT_MAX_SIZE = 65535
-TIME_OUT = 0.2
+TIME_OUT = 2
 TIME_GIVEUP_CONNECT = 10 / TIME_OUT  # 10 sec to give up sending syn
 TIME_GIVEUP_CLOSE = 3  # 3 times to give up sending fin
 START_CWND_SIZE = 10
@@ -26,16 +27,20 @@ class RUDPclient:
         self.server_address = to_address
         self.seq_num = 0
         # for more accurate
-        # self.seq_num = random.randint(100, 1000000)
+        self.seq_num = random.randint(100, 1000000)
         self.ack_num = 0
 
     def connect(self):
+        print("-----------------------------connection state----------------------------")
+
         response = None
         # send syn
         request = RUDP_Header(self.seq_num, 0, None, 0, True, False, True, False, self.my_win_size, b'')
         request.checksum = RUDP_Header.checksum_func(request.pack())
         print("client syn:" + str(request))
         request = request.pack()
+        # update after send
+        self.seq_num += 1
         tries = 0
         while True:
             self.m_socket.sendto(request, self.server_address)
@@ -50,18 +55,25 @@ class RUDPclient:
             break
         if tries >= TIME_GIVEUP_CONNECT: return None  # if cant connect
         print("server syn|ack : " + str(response))
+        # update after recv
+        self.ack_num = response.seq_num + 1
 
         # send ack
-        self.seq_num += 1
-        request = RUDP_Header(self.seq_num, response.seq_num + 1, None, 0, False, True, True, False, self.my_win_size,
+        request = RUDP_Header(self.seq_num, self.ack_num, None, 0, False, True, True, False, self.my_win_size,
                               b'')
         request.checksum = RUDP_Header.checksum_func(request.pack())
         print("client ack:" + str(request))
         request = request.pack()
         self.m_socket.sendto(request, self.server_address)
+        # update after send
+        self.seq_num += 1
+        print("-----------------------------request state----------------------------")
+
         return 0
 
     def close(self):
+        print("-----------------------------close state----------------------------")
+
         response = None
 
         # send fin
@@ -142,7 +154,7 @@ class RUDPclient:
                 if received is None: continue
                 if not received.ACK: continue
                 if received.ack_num < self.seq_num:
-                    # print("got wrong ack")
+                    print("Got wrong ack: "+str(received.ack_num)+ ", but seq is: "+str(self.seq_num))
                     continue
                 break
             print("server ack: " + str(len(received.data)) + " : " + str(received))
@@ -172,7 +184,7 @@ class RUDPclient:
             if received is None:
                 continue
             if received.ack_num < self.seq_num:
-                # print("got wrong ack")
+                print("Got wrong ack: " + str(received.ack_num) + ", but seq is: " + str(self.seq_num))
                 continue
             # All good
             print("server : " + str(len(received.data)) + " : " + str(received))

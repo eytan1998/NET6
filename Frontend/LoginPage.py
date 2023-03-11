@@ -100,7 +100,7 @@ class LoginPage(tk.Frame):
 
         self.Button_login_back = tk.Button(self)
         self.Button_login_back.place(relx=0.0, rely=0.0, height=33, width=52)
-        self.Button_login_back.configure(command=lambda: proj_support.goto(controller, "SetUpPage"))
+        self.Button_login_back.configure(command=lambda: proj_support.dicconnect(controller, "SetUpPage"))
         self.Button_login_back.configure(background="#f6f7f9")
         self.Button_login_back.configure(relief='flat', highlightthickness=0)
         self.photo = PhotoImage(file=r"Frontend/ic_back.png")

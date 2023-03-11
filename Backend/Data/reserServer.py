@@ -6,6 +6,7 @@ from Backend.Help.gabai import GabaiList, Gabai
 if __name__ == '__main__':
     x = SynagogueList()
     y = GabaiList()
+    # add the admin
     y.gabai_list.append(Gabai("admin", 1, "1243", "054548111", []))
     jsonpickle.set_encoder_options('json', sort_keys=False, indent=4)
     frozen = jsonpickle.encode(x.synagogues)

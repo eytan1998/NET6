@@ -175,6 +175,7 @@ class ViewSyngPage(tk.Frame):
         self.Scrolledtext1.configure(state='normal')
         self.TEntry_viewsyng_gabainame.configure(state='normal')
         self.TEntry_viewsyng_gabaiphone.configure(state='normal')
+        self.Button_viewsyng_save.configure(state='normal')
 
         self.TEntry_viewsyng_name.delete(0, END)
         self.TEntry_viewsyng_name.insert(0, x.name)
@@ -195,3 +196,4 @@ class ViewSyngPage(tk.Frame):
             self.TCombobox_viewsyng_nosah.configure(state='disabled')
             self.TCombobox_viewsyng_city.configure(state='disabled')
             self.Scrolledtext1.configure(state='disabled')
+            self.Button_viewsyng_save.configure(state='disabled')

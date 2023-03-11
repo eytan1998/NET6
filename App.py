@@ -1,3 +1,4 @@
+import argparse
 import tkinter as tk  # python 3
 from tkinter import font as tkfont  # python 3
 
@@ -10,13 +11,14 @@ from Frontend.SetUpPage import SetUpPage
 from Frontend.ViewGabaiPage import ViewGabaiPage
 from Frontend.ViewSyngPage import ViewSyngPage
 
+IS_TCP = True
+
 
 class App(tk.Tk):
-
     def __init__(self, *args, **kwargs):
         tk.Tk.__init__(self, *args, **kwargs)
         self.connection = None
-
+        self.isTCP = IS_TCP
         self.gabai = None
         self.syng_list = None
         self.gabai_list = None
@@ -57,12 +59,19 @@ class App(tk.Tk):
 def close_window():
     try:
         app.connection.close()
-    except:pass
+    except:
+        pass
     app.destroy()
     print("App closed")
 
 
 if __name__ == "__main__":
+    arg_parser = argparse.ArgumentParser(description='App.')
+
+    arg_parser.add_argument('--tcp', action=argparse.BooleanOptionalAction,
+                            help='Do the connection tcp instead of rudp.')
+    args = arg_parser.parse_args()
+    IS_TCP = args.tcp
     app = App()
     app.protocol("WM_DELETE_WINDOW", close_window)
     app.configure(bg="#f6f7f9")
