@@ -70,6 +70,7 @@ if __name__ == "__main__":
 
     arg_parser.add_argument('--tcp', action=argparse.BooleanOptionalAction,
                             help='Do the connection tcp instead of rudp.')
+
     args = arg_parser.parse_args()
     IS_TCP = args.tcp
     app = App()

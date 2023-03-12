@@ -43,7 +43,7 @@ class SetUpPage(tk.Frame):
         self.Label_DHCP_adress.configure(font="-family {DejaVu Sans} -size 12")
         self.Label_DHCP_adress.configure(foreground="#778899")
         self.Label_DHCP_adress.configure(highlightbackground="#f6f7f9")
-        self.Label_DHCP_adress.configure(text='''server adress''')
+        self.Label_DHCP_adress.configure(text='''server domain''')
         _style_code()
 
         self.TEntry_DHCP_addres = ttk.Entry(self)
@@ -76,3 +76,4 @@ class SetUpPage(tk.Frame):
         self.Button_setup_connect.configure(highlightbackground="#778899")
         self.Button_setup_connect.configure(relief="flat")
         self.Button_setup_connect.configure(text='''Connect''')
+

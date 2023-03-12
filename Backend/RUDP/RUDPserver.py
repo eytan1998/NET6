@@ -2,20 +2,20 @@ import random
 import socket
 
 from Backend.Help import Handelserver
+from Backend.RUDP.CC import CC
 from Backend.RUDP.rudp_packet import RUDP_Header
 from Backend.Help.app_packet import AppHeader
 
 MAX_BUFFER = 65535
 SEGMENT_MAX_SIZE = 65535
 TIMES_TO_EXIT = 3
-START_CWND_SIZE = 10
 
 
 class RUDPserver:
     def __init__(self, server_socket: socket):
         self.dest_win_size = 0
         self.my_win_size = MAX_BUFFER
-        self.cwnd = START_CWND_SIZE
+        self.cwnd = CC()
         self.server_socket = server_socket
         self.client_address = None
         self.buffer = b''
@@ -72,14 +72,9 @@ class RUDPserver:
 
         except socket.timeout:
             # got time out so cwnd half
-            self.cwnd = int(self.cwnd / 2)
             if msg_to_print is not None:
                 print(msg_to_print)
-        if msg is not None:
-            # got so update win
-            self.dest_win_size = msg.win_size
-        # got so increase cwnd
-        self.cwnd = self.cwnd * 2
+
         return msg
 
     def receiveData(self) -> None:
@@ -89,6 +84,7 @@ class RUDPserver:
             received = self.receiveFrom(None)
             # 2 process
             if received is None:
+                # in wait state dont need lower win
                 continue
             if received.FIN:
                 break
@@ -96,6 +92,8 @@ class RUDPserver:
                 # print("got wrong ack")
                 continue
             # All good
+            self.dest_win_size = received.win_size
+            self.cwnd.raiseCWND()
             # only if new
             if self.ack_num != received.seq_num + len(received.data):
                 self.buffer += received.data
@@ -144,7 +142,7 @@ class RUDPserver:
         if len(replay.data) > 0:
             data = replay.data
             start = 0
-            end = min(self.dest_win_size, self.cwnd, SEGMENT_MAX_SIZE, len(data))
+            end = min(self.dest_win_size, self.cwnd.getCWND(), SEGMENT_MAX_SIZE, len(data))
             while True:
                 the_end = (end == len(data))
                 # send
@@ -161,7 +159,9 @@ class RUDPserver:
                     # 1 get response ack
                     received = self.receiveFrom(None)
                     # 2 process
-                    if received is None: continue
+                    if received is None:
+                        self.cwnd.lowCWND()
+                        continue
                     if not received.ACK: continue
                     if received.ack_num < self.seq_num:
                         # print("got wrong ack")
@@ -169,12 +169,15 @@ class RUDPserver:
                     break
 
                 # got packet so update ack
+                self.cwnd.raiseCWND()
+                self.dest_win_size = received.win_size
+
                 self.ack_num = received.seq_num + len(received.data)
                 # finish segment see if the end
                 if the_end:
                     break
                 start = end
-                end = min(end + self.dest_win_size, end + self.cwnd, end + SEGMENT_MAX_SIZE, len(data))
+                end = min(end + self.dest_win_size, end + self.cwnd.getCWND(), end + SEGMENT_MAX_SIZE, len(data))
 
     def close(self, received):
         # send fin ack

@@ -118,7 +118,7 @@ class record_list:
             # got answer from google
             else:
                 rdata = response.getlayer(DNS).an.rdata
-                print("[+] Got answer " + rdata + " and save it")
+                print("[+] Got answer " + str(rdata) + " and save it")
                 self.append(record(domain, rdata, time()))
                 newans = response.getlayer(DNS).an
                 newans.rdata = rdata
@@ -127,7 +127,7 @@ class record_list:
                 return resp_pkt
 
     def append(self, record):
-        if not is_valid_ipv4_address(record.address): return
+        if not is_valid_ipv4_address(str(record.address)): return
         ans = self.is_contains(record.domain)
         if ans[0] == contains.EXPAIRE or ans[0] == contains.UP_TO_DATE: self.records.remove(ans[1])
         self.records.append(record)
@@ -171,7 +171,7 @@ class record_list:
                                                                                                                         self.to_late - (
                                                                                                                         time() -
                                                                                                                         iscontains[
-                                                                                                                            1].ttl)) / 1000),
+                                                                                                                            1].ttl))),
                                                                                                         rdlen=None,
                                                                                                         rdata=
                                                                                                         (iscontains[

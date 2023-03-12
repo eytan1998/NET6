@@ -8,7 +8,8 @@
         "synagogue_list": [
             10,
             12,
-            13
+            13,
+            14
         ]
     },
     {
@@ -18,7 +19,7 @@
         "password": "123",
         "phone": "412312",
         "synagogue_list": [
-            11
+            16
         ]
     }
 ]

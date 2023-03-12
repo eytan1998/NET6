@@ -4,15 +4,15 @@ from Backend.Help.app_packet import AppHeader
 
 BUFFER_SIZE = 65565
 
-DEFAULT_CLIENT_HOST = "127.0.0.1"  # The default host
-DEFAULT_CLIENT_PORT = 20215  # The default port
+
+
 
 class TCPclient:
-    def __init__(self, server_address):
+    def __init__(self, server_address, from_address: tuple[str, int]):
         self.server_address = server_address
         self.client_socket = None
 
-    def sendData(self, request:AppHeader):
+    def sendData(self, request: AppHeader):
         request = request.pack()
         self.client_socket.sendall(request)
         print(f"{self.server_address} Sending request of length {len(request)} bytes")
@@ -31,7 +31,6 @@ class TCPclient:
         except:
             self.client_socket.close()
             return None
-
 
     def close(self):
         self.client_socket.close()

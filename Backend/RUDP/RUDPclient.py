@@ -1,26 +1,25 @@
 import random
 import socket
 
+from Backend.RUDP.CC import CC
 from Backend.RUDP.rudp_packet import RUDP_Header
 from Backend.Help.app_packet import AppHeader
 
 MAX_BUFFER = 65535
 SEGMENT_MAX_SIZE = 65535
-TIME_OUT = 2
+TIME_OUT = 0.5
 TIME_GIVEUP_CONNECT = 10 / TIME_OUT  # 10 sec to give up sending syn
 TIME_GIVEUP_CLOSE = 3  # 3 times to give up sending fin
-START_CWND_SIZE = 10
 
 
 class RUDPclient:
-    def __init__(self, to_address: tuple[str, int]):
+    def __init__(self, to_address: tuple[str, int], from_address: tuple[str, int]):
         self.dest_win_size = 0
         self.my_win_size = MAX_BUFFER
-        self.cwnd = START_CWND_SIZE
+        self.cwnd = CC()
 
         self.m_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        # client_addr = ('127.0.0.1', 20451)
-        # self.m_socket.bind(client_addr)  # for address
+        self.m_socket.bind(from_address)  # for address
         self.m_socket.settimeout(TIME_OUT)
 
         self.buffer = b''
@@ -48,7 +47,8 @@ class RUDPclient:
             message = self.receiveFrom(None)
             tries += 1
             if tries >= TIME_GIVEUP_CONNECT: break
-            if message is None: continue
+            if message is None:
+                continue
             response = message
             if not response.ACK or not response.SYN: continue
             self.ack_num = response.ack_num
@@ -88,7 +88,8 @@ class RUDPclient:
             message = self.receiveFrom(None)
             tries += 1
             if tries >= TIME_GIVEUP_CLOSE: break
-            if message is None: continue
+            if message is None:
+                continue
             response = message
             if not response.ACK or not response.FIN: continue
             break
@@ -117,15 +118,8 @@ class RUDPclient:
                 return None
 
         except socket.timeout:
-            # got time out so cwnd to half
-            self.cwnd = int(self.cwnd / 2)
             if msg_in_timeout is not None:
                 print(msg_in_timeout)
-        # got so increase cwnd
-        self.cwnd = self.cwnd * 2
-        if msg is not None:
-            # got so update win
-            self.dest_win_size = msg.win_size
         return msg
 
     # get AppHeader.pack()
@@ -133,7 +127,7 @@ class RUDPclient:
         # 1 send segments
         data = request.pack()
         start = 0
-        end = min(self.dest_win_size, self.cwnd, SEGMENT_MAX_SIZE, len(data))
+        end = min(self.dest_win_size, self.cwnd.getCWND(), SEGMENT_MAX_SIZE, len(data))
         while True:
             the_end = (end == len(data))
             # send
@@ -151,7 +145,9 @@ class RUDPclient:
                 # 2 get ack for segment
                 received = self.receiveFrom(None)
                 # 2.1 process
-                if received is None: continue
+                if received is None:
+                    self.cwnd.lowCWND()
+                    continue
                 if not received.ACK: continue
                 if received.ack_num < self.seq_num:
                     print("Got wrong ack: "+str(received.ack_num)+ ", but seq is: "+str(self.seq_num))
@@ -160,12 +156,14 @@ class RUDPclient:
             print("server ack: " + str(len(received.data)) + " : " + str(received))
             # got packet so update ack
             self.ack_num = received.seq_num + len(received.data)
+            self.cwnd.raiseCWND()
+            self.dest_win_size = received.win_size
 
             # finish segment see if the end
             if the_end:
                 break
             start = end
-            end = min(end + self.dest_win_size, end + self.cwnd, end + SEGMENT_MAX_SIZE, len(data))
+            end = min(end + self.dest_win_size, end + self.cwnd.getCWND(), end + SEGMENT_MAX_SIZE, len(data))
         # 3 sent all now receive
         # get App header
         return self.receiveData()
@@ -182,12 +180,15 @@ class RUDPclient:
             received = self.receiveFrom(None)
             # 2 process
             if received is None:
+                self.cwnd.lowCWND()
                 continue
             if received.ack_num < self.seq_num:
                 print("Got wrong ack: " + str(received.ack_num) + ", but seq is: " + str(self.seq_num))
                 continue
             # All good
             print("server : " + str(len(received.data)) + " : " + str(received))
+            self.cwnd.raiseCWND()
+            self.dest_win_size = received.win_size
 
             # only if new
             if self.ack_num != received.seq_num + len(received.data):

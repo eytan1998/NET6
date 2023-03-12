@@ -11,7 +11,7 @@ from Backend.Help.synagogue import SynagogueList
 BUFFER_SIZE = 65536
 DEFAULT_SERVER_HOST = "127.0.0.1"
 DEFAULT_SERVER_PORT = 30381
-TIME_OUT = 2
+TIME_OUT = 0.5
 
 the_synagogue_list = SynagogueList()
 the_gabi_list = GabaiList()
@@ -103,7 +103,7 @@ if __name__ == '__main__':
     args = arg_parser.parse_args()
     host = args.host
     port = args.port
-    if args.tcp is None:
-        UDPserver(host, port)
-    else:
+    if args.tcp is True:
         TCPserver(host, port)
+    else:
+        UDPserver(host, port)

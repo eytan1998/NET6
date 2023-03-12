@@ -8,6 +8,7 @@ from Backend.Help.app_packet import Status_code
 from Backend.Help.gabai import Gabai
 from Backend.Help.synagogue import Synagogue, Nosah, City
 from Backend.TCP.TCPclient import TCPclient
+from DHCP.DHCPclient import get_DNS
 from DNS.DNSclient import sendDNS
 from Frontend.ScrolledListBox import ScrolledListBox
 
@@ -54,10 +55,16 @@ def goto(controller, to):
     controller.show_frame(to)
 
 
+DEFAULT_CLIENT_HOST = "127.0.0.1"  # The default host
+DEFAULT_CLIENT_PORT = 20215  # The default port
+
+
 def connect(controller, domain, output: tkinter.Text):
     output.delete(1.0, END)  # clean log
-    dns_server_addr = "127.0.0.1"  # TODO
-    output.insert(END, "Trying to connect to dns server :"+dns_server_addr+"\n")
+    output.insert(END, "Send message to DHCP server\n")
+    output.update()
+    myip, dns_server_addr = get_DNS()  # ignore the ip from dhcp
+    output.insert(END, "Trying to connect to dns server :" + dns_server_addr + "\n")
     output.update()
     ans = sendDNS(dns_server_addr, domain)
     if ans is None:
@@ -68,11 +75,12 @@ def connect(controller, domain, output: tkinter.Text):
         output.insert(END, "\nTry to connect...")
         output.update()
         server_address = (ans, DEFAULT_SERVER_PORT)
+        app_address = (DEFAULT_CLIENT_HOST, DEFAULT_CLIENT_PORT)
 
-        if controller.isTCP is None:
-            controller.connection = RUDPclient(server_address)
+        if controller.isTCP is True:
+            controller.connection = TCPclient(server_address, app_address)
         else:
-            controller.connection = TCPclient(server_address)
+            controller.connection = RUDPclient(server_address, app_address)
 
         ans = controller.connection.connect()
         if ans is None:
