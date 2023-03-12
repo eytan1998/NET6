@@ -150,7 +150,7 @@ class RUDPclient:
                     continue
                 if not received.ACK: continue
                 if received.ack_num < self.seq_num:
-                    print("Got wrong ack: "+str(received.ack_num)+ ", but seq is: "+str(self.seq_num))
+                    print("Got wrong ack: " + str(received.ack_num) + ", but seq is: " + str(self.seq_num))
                     continue
                 break
             print("server ack: " + str(len(received.data)) + " : " + str(received))

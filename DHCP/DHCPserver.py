@@ -104,7 +104,7 @@ if __name__ == '__main__':
                             default=dns, help='The dns server.')
     args = arg_parser.parse_args()
     dns = args.host
-
+    print("[+] DHCP server is running")
     while True:
         packet = get_discover()
         if packet[0][DHCP].options[0][1] == 3:

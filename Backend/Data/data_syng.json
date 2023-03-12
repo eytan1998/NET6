@@ -1,123 +1,8 @@
 [
     {
         "py/object": "Backend.Help.synagogue.Synagogue",
-        "name": "asd",
+        "name": "shalom",
         "id_synagogue": 10,
-        "nosah": {
-            "py/reduce": [
-                {
-                    "py/type": "Backend.Help.synagogue.Nosah"
-                },
-                {
-                    "py/tuple": [
-                        4
-                    ]
-                }
-            ]
-        },
-        "city": {
-            "py/reduce": [
-                {
-                    "py/type": "Backend.Help.synagogue.City"
-                },
-                {
-                    "py/tuple": [
-                        4
-                    ]
-                }
-            ]
-        },
-        "prayers": "asd\n\n\n",
-        "gabai": {
-            "py/object": "Backend.Help.gabai.Gabai",
-            "name": "oz",
-            "gabai_id": 10,
-            "password": "123",
-            "phone": "412312",
-            "synagogue_list": [
-                11
-            ]
-        }
-    },
-    {
-        "py/object": "Backend.Help.synagogue.Synagogue",
-        "name": "new beit knecet",
-        "id_synagogue": 13,
-        "nosah": {
-            "py/reduce": [
-                {
-                    "py/type": "Backend.Help.synagogue.Nosah"
-                },
-                {
-                    "py/tuple": [
-                        1
-                    ]
-                }
-            ]
-        },
-        "city": {
-            "py/reduce": [
-                {
-                    "py/type": "Backend.Help.synagogue.City"
-                },
-                {
-                    "py/tuple": [
-                        91
-                    ]
-                }
-            ]
-        },
-        "prayers": "shahrit: 600,900\nminha: 14:00, 15:00\nhrvit: 19:00\nsihor 20:00\nharvit 2: 21:00\n\n",
-        "gabai": {
-            "py/object": "Backend.Help.gabai.Gabai",
-            "name": "admin",
-            "gabai_id": 1,
-            "password": "1243",
-            "phone": "054548111",
-            "synagogue_list": [
-                10,
-                12,
-                13
-            ]
-        }
-    },
-    {
-        "py/object": "Backend.Help.synagogue.Synagogue",
-        "name": "asdasd",
-        "id_synagogue": 14,
-        "nosah": {
-            "py/id": 7
-        },
-        "city": {
-            "py/reduce": [
-                {
-                    "py/type": "Backend.Help.synagogue.City"
-                },
-                {
-                    "py/tuple": [
-                        0
-                    ]
-                }
-            ]
-        },
-        "prayers": "sdsdas d\t\nd\td \nd\n\t\nd\ndas\n",
-        "gabai": {
-            "py/object": "Backend.Help.gabai.Gabai",
-            "name": "admin",
-            "gabai_id": 1,
-            "password": "1243",
-            "phone": "054548111",
-            "synagogue_list": [
-                10,
-                12,
-                13
-            ]
-        }
-    },
-    {
-        "py/object": "Backend.Help.synagogue.Synagogue",
-        "name": "AAAAAAAAAAAAAAAAAAAAAaa",
-        "id_synagogue": 12,
         "nosah": {
             "py/reduce": [
                 {
@@ -137,32 +22,36 @@
                 },
                 {
                     "py/tuple": [
-                        6
+                        4
                     ]
                 }
             ]
         },
-        "prayers": "123123e12e\n\n\n\n",
+        "prayers": "shahrit : 8:00\nShior : 9:20\n\nminha: 13:00\n\nmariv: 19:00\nmariv2: 21:00\n",
         "gabai": {
             "py/object": "Backend.Help.gabai.Gabai",
-            "name": "admin",
-            "gabai_id": 1,
-            "password": "1243",
-            "phone": "054548111",
-            "synagogue_list": [
-                10,
-                12,
-                13,
-                14
-            ]
+            "name": "oz",
+            "gabai_id": 10,
+            "password": "1212",
+            "phone": "0545874628",
+            "synagogue_list": []
         }
     },
     {
         "py/object": "Backend.Help.synagogue.Synagogue",
-        "name": "asdasd",
-        "id_synagogue": 15,
+        "name": "hadar",
+        "id_synagogue": 11,
         "nosah": {
-            "py/id": 2
+            "py/reduce": [
+                {
+                    "py/type": "Backend.Help.synagogue.Nosah"
+                },
+                {
+                    "py/tuple": [
+                        3
+                    ]
+                }
+            ]
         },
         "city": {
             "py/reduce": [
@@ -171,32 +60,157 @@
                 },
                 {
                     "py/tuple": [
-                        7
+                        2
                     ]
                 }
             ]
         },
-        "prayers": "asd;kasmd;lasd sd;laksd;lasd\nasd;aksd;a \t;dl ks\t;dl\t\nd \t'ldk;sldk;qsldk;\tldl;\n\tdk\t 'sldk\t'\n",
+        "prayers": "shahrit : 8:00\nShior : 9:20\n\nminha: 13:00\n\nmariv: 19:00\nmariv2: 21:00\n",
         "gabai": {
             "py/object": "Backend.Help.gabai.Gabai",
-            "name": "ads",
-            "gabai_id": 11,
-            "password": "123",
-            "phone": "06513212",
-            "synagogue_list": []
+            "name": "oz",
+            "gabai_id": 10,
+            "password": "1212",
+            "phone": "0545874628",
+            "synagogue_list": [
+                10
+            ]
         }
     },
     {
         "py/object": "Backend.Help.synagogue.Synagogue",
-        "name": "beit kneset 1",
-        "id_synagogue": 16,
+        "name": "shemes",
+        "id_synagogue": 12,
         "nosah": {
-            "py/id": 16
+            "py/reduce": [
+                {
+                    "py/type": "Backend.Help.synagogue.Nosah"
+                },
+                {
+                    "py/tuple": [
+                        4
+                    ]
+                }
+            ]
         },
         "city": {
             "py/reduce": [
                 {
                     "py/type": "Backend.Help.synagogue.City"
+                },
+                {
+                    "py/tuple": [
+                        83
+                    ]
+                }
+            ]
+        },
+        "prayers": "shahrit : 8:00\nShior : 9:20\n\nminha: 13:00\n\nmariv: 19:00\nmariv2: 21:00\n",
+        "gabai": {
+            "py/object": "Backend.Help.gabai.Gabai",
+            "name": "oz",
+            "gabai_id": 10,
+            "password": "1212",
+            "phone": "0545874628",
+            "synagogue_list": [
+                10,
+                11
+            ]
+        }
+    },
+    {
+        "py/object": "Backend.Help.synagogue.Synagogue",
+        "name": "Shemes shalom",
+        "id_synagogue": 13,
+        "nosah": {
+            "py/reduce": [
+                {
+                    "py/type": "Backend.Help.synagogue.Nosah"
+                },
+                {
+                    "py/tuple": [
+                        5
+                    ]
+                }
+            ]
+        },
+        "city": {
+            "py/reduce": [
+                {
+                    "py/type": "Backend.Help.synagogue.City"
+                },
+                {
+                    "py/tuple": [
+                        92
+                    ]
+                }
+            ]
+        },
+        "prayers": "shahrit : 8:00\nShior : 9:20\n\nminha: 13:00\n\nmariv: 19:00\nmariv2: 21:00\n",
+        "gabai": {
+            "py/object": "Backend.Help.gabai.Gabai",
+            "name": "oz",
+            "gabai_id": 10,
+            "password": "1212",
+            "phone": "0545874628",
+            "synagogue_list": [
+                10,
+                11,
+                12
+            ]
+        }
+    },
+    {
+        "py/object": "Backend.Help.synagogue.Synagogue",
+        "name": "tamar",
+        "id_synagogue": 14,
+        "nosah": {
+            "py/reduce": [
+                {
+                    "py/type": "Backend.Help.synagogue.Nosah"
+                },
+                {
+                    "py/tuple": [
+                        15
+                    ]
+                }
+            ]
+        },
+        "city": {
+            "py/reduce": [
+                {
+                    "py/type": "Backend.Help.synagogue.City"
+                },
+                {
+                    "py/tuple": [
+                        50
+                    ]
+                }
+            ]
+        },
+        "prayers": "shahrit : 8:00\nShior : 9:20\n\nminha: 13:00\n\nmariv: 19:00\nmariv2: 21:00\n",
+        "gabai": {
+            "py/object": "Backend.Help.gabai.Gabai",
+            "name": "oz",
+            "gabai_id": 10,
+            "password": "1212",
+            "phone": "0545874628",
+            "synagogue_list": [
+                10,
+                11,
+                12,
+                13
+            ]
+        }
+    },
+    {
+        "py/object": "Backend.Help.synagogue.Synagogue",
+        "name": "beit shalom",
+        "id_synagogue": 15,
+        "nosah": {
+            "py/reduce": [
+                {
+                    "py/type": "Backend.Help.synagogue.Nosah"
                 },
                 {
                     "py/tuple": [
@@ -205,14 +219,57 @@
                 }
             ]
         },
-        "prayers": "sahrit: 900\nminha: 1200\nmariv: 1900\n",
+        "city": {
+            "py/reduce": [
+                {
+                    "py/type": "Backend.Help.synagogue.City"
+                },
+                {
+                    "py/tuple": [
+                        55
+                    ]
+                }
+            ]
+        },
+        "prayers": "shahrit : 8:00\nShior : 9:20\n\nminha: 13:00\n\nmariv: 19:00\nmariv2: 21:00\n",
         "gabai": {
             "py/object": "Backend.Help.gabai.Gabai",
-            "name": "oz",
-            "gabai_id": 10,
-            "password": "123",
-            "phone": "412312",
+            "name": "eitan",
+            "gabai_id": 11,
+            "password": "0009",
+            "phone": "0546476829",
             "synagogue_list": []
+        }
+    },
+    {
+        "py/object": "Backend.Help.synagogue.Synagogue",
+        "name": "tamr dvora",
+        "id_synagogue": 16,
+        "nosah": {
+            "py/id": 17
+        },
+        "city": {
+            "py/reduce": [
+                {
+                    "py/type": "Backend.Help.synagogue.City"
+                },
+                {
+                    "py/tuple": [
+                        75
+                    ]
+                }
+            ]
+        },
+        "prayers": "shahrit : 8:00\nShior : 9:20\n\nminha: 13:00\n\nmariv: 19:00\nmariv2: 21:00\n",
+        "gabai": {
+            "py/object": "Backend.Help.gabai.Gabai",
+            "name": "eitan",
+            "gabai_id": 11,
+            "password": "0009",
+            "phone": "0546476829",
+            "synagogue_list": [
+                15
+            ]
         }
     }
 ]

@@ -5,8 +5,17 @@
         "gabai_id": 1,
         "password": "1243",
         "phone": "054548111",
+        "synagogue_list": []
+    },
+    {
+        "py/object": "Backend.Help.gabai.Gabai",
+        "name": "oz",
+        "gabai_id": 10,
+        "password": "1212",
+        "phone": "0545874628",
         "synagogue_list": [
             10,
+            11,
             12,
             13,
             14
@@ -14,11 +23,12 @@
     },
     {
         "py/object": "Backend.Help.gabai.Gabai",
-        "name": "oz",
-        "gabai_id": 10,
-        "password": "123",
-        "phone": "412312",
+        "name": "eitan",
+        "gabai_id": 11,
+        "password": "0009",
+        "phone": "0546476829",
         "synagogue_list": [
+            15,
             16
         ]
     }
